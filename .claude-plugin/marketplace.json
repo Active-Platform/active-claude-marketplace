@@ -1,0 +1,34 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "businessfitness",
+  "description": "Business Fitness public plugins for Claude Code: Active Platform integrations. Experimental, provided as-is.",
+  "owner": {
+    "name": "Business Fitness",
+    "url": "https://www.active.businessfitness.com"
+  },
+  "plugins": [
+    {
+      "name": "active-platform",
+      "displayName": "Active Platform",
+      "source": "./plugins/active-platform",
+      "description": "Find and manage your Active clients, groups, documents and workpaper binders (the firm's client book) through the Active MCP server, plus the Workpapers client-queries skill suite. Requires an Active Platform subscription.",
+      "author": {
+        "name": "Business Fitness"
+      },
+      "category": "productivity",
+      "homepage": "https://github.com/Active-Platform/active-claude-marketplace",
+      "repository": "https://github.com/Active-Platform/active-claude-marketplace",
+      "license": "Apache-2.0",
+      "keywords": [
+        "active",
+        "active-platform",
+        "practice-management",
+        "accounting",
+        "clients",
+        "workpapers",
+        "mcp",
+        "businessfitness"
+      ]
+    }
+  ]
+}

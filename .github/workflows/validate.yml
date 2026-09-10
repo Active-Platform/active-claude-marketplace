@@ -1,0 +1,31 @@
+name: Validate
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+      - name: Validate marketplace manifest and referenced plugins
+        run: node scripts/validate-marketplace.mjs
+      - name: Forbidden internal references
+        run: |
+          set -euo pipefail
+          # Character classes + a no-backslash boundary so the pattern needs no escapes.
+          pattern='mcp-staging|localhost|127[.]0[.]0[.]1|atlassian[.]net|bf-doc|dev[.]businessfitness|[$][{]ACTIVE_MCP_URL|active-documents-(fetch|upload)($|[^a-z])'
+          if grep -rEn --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=.github "$pattern" . ; then
+            echo "::error::Internal reference found (see matches above). The public build must not contain these."
+            exit 1
+          fi
+          echo "No forbidden references."
