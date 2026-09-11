@@ -20,12 +20,4 @@ jobs:
       - name: Validate marketplace manifest and referenced plugins
         run: node scripts/validate-marketplace.mjs
       - name: Forbidden internal references
-        run: |
-          set -euo pipefail
-          # Character classes + a no-backslash boundary so the pattern needs no escapes.
-          pattern='mcp-staging|localhost|127[.]0[.]0[.]1|atlassian[.]net|bf-doc|dev[.]businessfitness|[$][{]ACTIVE_MCP_URL|active-documents-(fetch|upload)($|[^a-z])'
-          if grep -rEn --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=.github "$pattern" . ; then
-            echo "::error::Internal reference found (see matches above). The public build must not contain these."
-            exit 1
-          fi
-          echo "No forbidden references."
+        run: bash .github/scripts/check-forbidden-references.sh
