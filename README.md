@@ -11,7 +11,7 @@ Work with your **Active Platform** client book from Claude: find clients and cli
 
 ```
 /plugin marketplace add Active-Platform/active-claude-marketplace
-/plugin install active-platform@businessfitness
+/plugin install active-platform@active
 ```
 
 Start a conversation and use an Active tool; the first call opens your browser to sign in.
