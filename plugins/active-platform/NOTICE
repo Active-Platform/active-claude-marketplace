@@ -1,0 +1,12 @@
+Active Platform — Claude Code plugin
+Copyright 2026 Business Fitness (Accountants) Pty Ltd
+
+This product includes software developed at Business Fitness (https://www.businessfitness.com/).
+
+Licensed under the Apache License, Version 2.0. You may not use this product except in
+compliance with that licence; a copy of it accompanies this file as LICENSE, and is also
+available at http://www.apache.org/licenses/LICENSE-2.0.
+
+The bundled bf-doc utility requires the .NET runtime (Copyright (c) .NET Foundation and
+Contributors, MIT licence). The runtime is not distributed with this plugin and must be
+installed separately.
