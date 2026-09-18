@@ -1,0 +1,51 @@
+name: Release
+
+# When a plugin manifest's version changes on master, draft a GitHub Release for it.
+# The org tag ruleset blocks Actions from creating tags, so this creates a DRAFT:
+# GitHub creates the v<version> tag only when an admin publishes the draft, under
+# their own (bypass-permitted) identity. Adapted from datadog-labs/claude-code-plugin.
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'plugins/*/.claude-plugin/plugin.json'
+
+permissions:
+  contents: read
+
+jobs:
+  draft-release:
+    name: draft-release
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Read plugin version
+        id: version
+        run: |
+          set -euo pipefail
+          MANIFEST=plugins/active-platform/.claude-plugin/plugin.json
+          VERSION=$(node -p "JSON.parse(require('fs').readFileSync('$MANIFEST','utf8')).version")
+          [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]] || { echo "::error::Unexpected version '$VERSION' in $MANIFEST"; exit 1; }
+          PRERELEASE=false; [[ "$VERSION" == *-* ]] && PRERELEASE=true
+          { echo "version=$VERSION"; echo "tag=v$VERSION"; echo "prerelease=$PRERELEASE"; } >> "$GITHUB_OUTPUT"
+          echo "Detected version $VERSION (prerelease=$PRERELEASE)"
+
+      - name: Create draft release unless the tag already exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+          PRERELEASE: ${{ steps.version.outputs.prerelease }}
+        run: |
+          set -euo pipefail
+          # Match on tag_name rather than `gh release view` so existing DRAFTS count too.
+          EXISTING=$(gh api "repos/$GITHUB_REPOSITORY/releases" --paginate --jq "[.[] | select(.tag_name == \"$TAG\")] | length")
+          if [ "$EXISTING" -gt 0 ]; then echo "Release $TAG already exists or is drafted; nothing to do."; exit 0; fi
+          ARGS=(--title "$TAG" --generate-notes --draft --target "$GITHUB_SHA")
+          [ "$PRERELEASE" = "true" ] && ARGS+=(--prerelease)
+          gh release create "$TAG" "${ARGS[@]}"
+          echo "Drafted $TAG. An admin publishes it to create the tag."

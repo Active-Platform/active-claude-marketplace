@@ -1,0 +1,29 @@
+name: External pull requests
+
+# This repository does not accept pull requests from outside the maintainer team: its content
+# is generated from Business Fitness's internal source. Pull requests from forks are closed with
+# a note pointing to issues. pull_request_target is safe here because the pull request's code is
+# never checked out or executed; only the GitHub API is called.
+
+on:
+  pull_request_target:
+    types: [opened, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  close-external:
+    name: close-external
+    if: github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment and close
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          gh pr comment "$PR" --repo "$REPO" --body "Thanks for your interest. This repository is published read-only and does not accept external pull requests: its contents are generated from Business Fitness's internal source and replaced on each release."
+          gh pr close "$PR" --repo "$REPO"
