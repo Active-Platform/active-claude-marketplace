@@ -1,0 +1,4 @@
+#!/bin/sh
+# macOS/Linux shim: bare `bf-doc` resolves here (SessionStart adds tools/ to PATH) and runs the portable DLL.
+# CI must mark this file executable (chmod +x).
+exec dotnet "$(dirname "$0")/bf-doc.dll" "$@"

@@ -1,0 +1,26 @@
+{
+  "name": "active-platform",
+  "displayName": "Active Platform",
+  "description": "Find and manage your Active clients and client groups, their documents, and workpaper binders (trial balance / ledger) -- the firm's client book / CRM -- through the Active MCP server. Includes curl-free document I/O: fetch a document to disk, edit it with any tool, and upload it back as a new version, via a small bundled .NET helper. Plus the Workpapers client-queries skill suite. Requires an Active Platform subscription, and the .NET 10 runtime for document I/O.",
+  "version": "1.0.1-preview.3",
+  "author": {
+    "name": "Business Fitness"
+  },
+  "homepage": "https://github.com/Active-Platform/active-claude-marketplace",
+  "license": "Apache-2.0",
+  "keywords": [
+    "active",
+    "practice-management",
+    "crm",
+    "clients",
+    "groups",
+    "documents",
+    "workpapers",
+    "binders",
+    "jobs",
+    "ledger",
+    "mcp",
+    "businessfitness"
+  ],
+  "repository": "https://github.com/Active-Platform/active-claude-marketplace"
+}
