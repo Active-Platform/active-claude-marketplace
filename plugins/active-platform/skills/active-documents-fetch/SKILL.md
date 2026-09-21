@@ -1,13 +1,12 @@
 ---
 name: active-documents-fetch
-description: 'Download an Active document''s active version to a local file so you (or another tool) can open or edit it, without curl. Use when the user wants to fetch, download, open, or pull an existing Active document to disk — typically the first half of "edit this document and save it back". Not for showing someone a document or sending them a link: every document result already carries a `webUrl` into Active for that.'
+description: 'Download an Active document''s active version to a local file so you (or another tool) can open or edit it. Use when the user wants to fetch, download, open, or pull an existing Active document to disk — typically the first half of "edit this document and save it back". Not for showing someone a document or sending them a link: every document result already carries a `webUrl` into Active for that.'
 ---
 
 # Fetch an Active document to a local file
 
 Bring an Active document's **active version** down to local disk so it can be opened or edited. The bytes
-move directly between Azure storage and disk via the bundled `bf-doc` helper — they never pass through the
-conversation, and no `curl` is involved.
+move directly between Azure storage and disk — they never pass through the conversation.
 
 ## When to use this
 
@@ -32,31 +31,27 @@ This skill is for when *you* need the bytes.
    note its **`id`** — the GUID every tool below takes as `documentId`, not the Document ID.
 2. Mint a download link: call **`active-documents-documents-link`** with `linkType: "download"`. It returns
    a short-lived Azure Blob **SAS URL** for the active version (≈15-minute TTL — fetch promptly).
-3. Move the bytes to disk with the bundled `bf-doc` helper — call it **bare**:
+3. **`GET` that URL straight to a file on disk**, using whatever HTTP client you can run in this
+   environment. The URL already carries its own credentials, so the request needs no auth headers of
+   yours.
 
-   ```
-   bf-doc download "<sas-url>" "<dest-path>"
-   ```
-
-   - `bf-doc` ships **inside this plugin** and the plugin makes the bare command above resolve
-     automatically — it is **not** an npm/global package. If it ever reports "command not found", the
-     `active-platform` plugin is not enabled/loaded in this session; enable it. Do **not** hunt for the binary
-     with `npm`, `where`, `which`, `find`, or a file search.
-   - `<dest-path>` defaults to the document's filename in the current working directory; pass an explicit
-     path to put it elsewhere.
-   - `bf-doc` refuses to overwrite an existing file unless you add `--overwrite`.
-   - `bf-doc` prints the absolute path it wrote — use that as the file to open/edit.
+   - Write it to the document's filename in the current working directory unless the user asked for
+     somewhere specific. Pick the destination before you start — stream the response to the file rather
+     than reading the bytes into the conversation.
+   - Don't overwrite an existing file without saying so; pick a distinct name or confirm first.
+   - This normally costs **one permission prompt**, because it is a shell/network call. That is expected
+     and routine — approve-and-continue is the whole flow, not a sign something is wrong and not a reason
+     to stop and report that you cannot fetch the document. Just say what you are fetching and why.
+   - Note the path you wrote — that is the file to open or edit.
 
 4. Hand the local path to whatever will open or edit it. To save changes back, use the
    `active-documents-upload` skill.
 
 ## Notes
 
-- `bf-doc` only ever talks to Azure Blob SAS URLs — it refuses any other host, so there is no permission
-  prompt to approve and no risk of it fetching something else.
-- Only if `bf-doc` is genuinely unavailable (the plugin isn't loaded, or the .NET runtime is missing) fall
-  back to a direct `GET` of the SAS URL to disk. Expect a permission prompt for that, and say why you
-  needed it.
+- A download URL is a short-lived capability: treat it as a credential, don't log it or paste it into
+  anything durable, and re-mint it rather than reusing a stale one. If it has expired (the GET fails),
+  call `active-documents-documents-link` again for a fresh one.
 - Both link types from `active-documents-documents-link` are short-lived storage credentials, not a place
   in Active: a `preview` link (its default) opens a browser viewer over the bytes and is **not** the raw
   file, so always pass `linkType: "download"` when you intend to edit them. Neither is the link to hand a
