@@ -2,7 +2,7 @@
 
 Releases of this plugin, newest first.
 
-## 1.0.1-preview.4
+## 1.0.1-preview.5
 
 First release. The plugin is in preview — expect it to change between releases, and please tell us
 what breaks.
@@ -15,13 +15,9 @@ what breaks.
   rather than a download of the file. Ask to download or edit it instead and the link takes you
   straight there. Claude still fetches the file when it needs the contents themselves.
 - Work on a document end to end: fetch it to disk, edit it with any tool, and upload it back as a
-  new version. The bundled `bf-doc` mover carries the bytes with no permission prompt. It is
-  optional: without the .NET runtime the plugin stays quiet rather than reporting a failed helper,
-  Claude transfers the bytes itself and asks you to approve each transfer, and nothing else in the
-  plugin is affected.
-- Transfers are limited to signed Azure Storage links — the form Active issues for a document.
-  `bf-doc` accepts nothing else, and the plugin re-checks the link before it skips the prompt;
-  anything else asks for your approval like any other command.
+  new version. Claude moves the bytes itself and asks you to approve each transfer, so you see
+  every file that leaves or arrives. The file never passes through the conversation, and there is
+  nothing extra to install for this to work.
 - Added the workpapers client-queries suite: work out what a binder still needs from the client,
   search what the firm already holds, file what it finds, record the gaps as queries, and draft the
   client correspondence. Run `/active-platform:wp-setup` once first — it detects which sources you
