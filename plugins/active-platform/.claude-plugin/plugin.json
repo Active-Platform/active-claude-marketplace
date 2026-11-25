@@ -2,11 +2,12 @@
   "name": "active-platform",
   "displayName": "Active Platform",
   "description": "Find and manage your Active clients and client groups, their documents, and workpaper binders (trial balance / ledger) -- the firm's client book / CRM -- through the Active MCP server. Includes document I/O: fetch a document to disk, edit it with any tool, and upload it back as a new version, with Claude moving the bytes itself and asking you to approve each transfer. Plus the Workpapers client-queries skill suite. Requires an Active Platform subscription. Nothing extra to install.",
-  "version": "1.0.1-preview.5",
+  "version": "1.0.1-preview.8",
   "author": {
     "name": "Business Fitness"
   },
   "homepage": "https://github.com/Active-Platform/active-claude-marketplace",
+  "privacyPolicyUrl": "https://www.active.businessfitness.com/privacy-policy",
   "license": "Apache-2.0",
   "keywords": [
     "active",

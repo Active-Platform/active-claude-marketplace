@@ -1,0 +1,31 @@
+<svg id="a7508dee-0038-43af-a738-f0e0c67e86a3" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 59.19368 59.19368">
+  <defs>
+    <style>
+      .ab3b7d2d-9a3a-4e55-8c50-ebc09ebfb9fe {
+        fill: #231f20;
+      }
+
+      @media (prefers-color-scheme: dark) {
+          .ab3b7d2d-9a3a-4e55-8c50-ebc09ebfb9fe {
+          fill: #ffffff;
+        }
+      }
+
+      .fce48cec-ca97-4c7c-bc17-e6d42e19d24a {
+        fill: url(#af63e143-1a20-4520-9614-768a41d2d1fb);
+      }
+
+      .a3665a70-0de3-455b-b66b-edf0b550a1c4 {
+        fill: #ec008c;
+      }
+    </style>
+    <linearGradient id="af63e143-1a20-4520-9614-768a41d2d1fb" x1="-1.63806" y1="20.30608" x2="32.12742" y2="14.35232" gradientUnits="userSpaceOnUse">
+      <stop offset="0.23465" stop-color="#f15a29"/>
+      <stop offset="0.51774" stop-color="#f04749"/>
+      <stop offset="0.90964" stop-color="#ee2a7b"/>
+    </linearGradient>
+  </defs>
+  <path class="ab3b7d2d-9a3a-4e55-8c50-ebc09ebfb9fe" d="M0,29.5968A29.591,29.591,0,0,0,44.39507,55.22426v3.3829H59.19353V29.5968A29.597,29.597,0,0,0,29.59661,0h0Zm44.39507,0a14.79846,14.79846,0,0,1-29.59692,0H29.59661V14.79842A14.79855,14.79855,0,0,1,44.39507,29.5968Z"/>
+  <polygon class="fce48cec-ca97-4c7c-bc17-e6d42e19d24a" points="29.597 0 29.597 29.597 0 29.597 29.597 0"/>
+  <polygon class="a3665a70-0de3-455b-b66b-edf0b550a1c4" points="29.597 14.798 29.597 29.597 14.798 29.597 29.597 14.798"/>
+</svg>

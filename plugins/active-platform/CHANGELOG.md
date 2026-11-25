@@ -2,7 +2,7 @@
 
 Releases of this plugin, newest first.
 
-## 1.0.1-preview.5
+## 1.0.1-preview.8
 
 First release. The plugin is in preview — expect it to change between releases, and please tell us
 what breaks.
@@ -14,6 +14,11 @@ what breaks.
 - Ask to see a document and you get a link to it in Active — durable, yours to keep and share —
   rather than a download of the file. Ask to download or edit it instead and the link takes you
   straight there. Claude still fetches the file when it needs the contents themselves.
+- Document searches cover a client's whole history, as the app's document list does. A client-group
+  search can cover only the last 30 days when your firm's search index can't serve it — while the index
+  is still being prepared, or for a filter it doesn't hold, such as source; Claude tells you when that
+  happens and can search the period you need. You can choose which fields a search matches —
+  title, email subject, keywords, client or description — and a quoted document number comes first.
 - Work on a document end to end: fetch it to disk, edit it with any tool, and upload it back as a
   new version. Claude moves the bytes itself and asks you to approve each transfer, so you see
   every file that leaves or arrives. The file never passes through the conversation, and there is
@@ -24,6 +29,13 @@ what breaks.
   can search, captures your firm's correspondence style, and checks that the background worker
   these skills rely on can reach Active. If it cannot — which happens when Active was connected
   outside this plugin — setup explains why and offers to write the one-file fix for you.
+- Set up a new workpaper binder by asking for one. Claude works out the template, period, source,
+  columns and rollover with you, shows you the whole plan once to approve, then creates the binder,
+  rolls it over, configures it and imports the trial balance, telling you when the import is done.
+  When a step needs you — reconnecting to your accounting system or choosing a Ledger dataset —
+  Claude gives you the link and picks up where it stopped once you say it's sorted. AU binders also
+  come with a link to connect the ATO.
+  Longer steps such as a rollover get up to four minutes before Claude stops waiting.
 - What a Workpapers-only licence covers is spelled out in setup and the requirements. You can
   search, open, file, update and link documents; adding a new version of an existing document and
   opening a stored email's body need Active Documents. Where versioning is unavailable the filing
