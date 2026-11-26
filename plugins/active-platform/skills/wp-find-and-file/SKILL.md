@@ -42,4 +42,4 @@ queries it happens to answer. Shared `intake` recipe — no client interaction, 
 - Running this before `wp-client-queries-initial-request` is **optional** — that recipe's single
   `wp-intake-discover` (`needs`) sweep already files held docs it finds along the way. Use
   `wp-find-and-file` first when you want "file what we hold" as its own reviewed step.
-- Scope filters (classification / date window) pass straight through to the discover sweep.
+- Scope filters (classification / date window) go unchanged to the discover sweep.

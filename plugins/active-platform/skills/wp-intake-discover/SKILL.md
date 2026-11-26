@@ -57,13 +57,16 @@ attribute hits in §3. One cheap call; skip entirely when the client has no grou
 
 Search the readable sources only (manifest `status=connected, read=true`; note skipped sources in the
 output), scoped by client + FY window:
-- `active-documents-documents-search` — scope `clientId` + `modifiedFrom`, **or, when
+- `active-documents-documents-search` — scope `clientId`, **or, when
   `BinderContext.clientGroupId` is set, you MUST pass `clientGroupId` (not `clientId`)** (the two are
   mutually exclusive — **exactly one is required**; group scope catches documents filed under a sibling
   entity or at group level — and a `clientId`-scoped search of a grouped entity **silently returns
   nothing filed at group level or against a sibling** (no error), so entity-scoping a grouped client
-  will miss held evidence and manufacture false gaps; the
-  search defaults to a ~6-month window, so pass `modifiedFrom` to reach older docs); **`source=FromClient`
+  will miss held evidence and manufacture false gaps). Leave `modifiedFrom` unset: the search then
+  covers the client's whole history, which held evidence such as deeds often predates. **If the result
+  carries `appliedDateRange`**, re-run with `modifiedFrom` at the start of the FY window — never an
+  arbitrary early date — and note in the output that group documents modified before it were not
+  searched, so nothing older is reported as a gap; **`source=FromClient`
   is a strong intake signal**; email threads collapse by default (`collapseEmailThreads`), and a hit's
   full conversation comes from `active-documents-documents-thread-list`; **no per-item `documents-get`
   for bulk triage** — open a single ambiguous item only under the confirm-by-opening cap

@@ -154,8 +154,16 @@ areas inherit it.
 **Cheapest method first (the ladder):** search-result snippet / thread rows via
 `active-documents-documents-thread-list` (pass any email doc id) → `read_resource` (an M365
 item/attachment body) → `active-documents-documents-get` (one targeted Active document — a plain
-by-id fetch; it carries no thread children). When a PDF/xlsx *body* must actually be read, mint a
-download link with `active-documents-documents-link` (`linkType: download`) and read the bytes from it.
+by-id fetch; it carries no thread children). **Main conversation only —** when a PDF/xlsx *body* must
+actually be read, mint a download link with `active-documents-documents-link` (`linkType: download`)
+and read the bytes from it.
+
+**Inside the discovery subagent the ladder stops at `active-documents-documents-get`.** Reading the
+bytes means GETting a short-lived SAS URL with a shell or HTTP client, and the worker has neither by
+design — granting a deliberately read-only worker arbitrary shell access is a worse trade than
+degrading. So when only the body would resolve an item, leave it **unopened**, cap its `confidence`
+and route it to reviewer confirmation — the same path as items beyond the per-sweep cap below — and
+let its `inspection` marker stay `metadata-only`.
 
 **Per-sweep cap (~3–5, tunable).** Prioritise the docs to open by uncertainty × value. Beyond the
 cap, leave remaining low-confidence items **unopened**, cap their `confidence`, and route them to
@@ -226,8 +234,9 @@ How a found M365 / third-party item becomes an Active document, in preference or
   [confirm-by-opening](#confirm-by-opening-document-inspection). `documents-get` is a plain by-id
   fetch (no thread children). Note `documents-search` requires **exactly one** of
   `clientId`/`clientGroupId` (for a grouped client pass `clientGroupId` — entity-scoping silently omits
-  group/sibling docs; see *Group-level correspondence & attribution*) and defaults to a ~6-month
-  modified window — pass `modifiedFrom` to reach older documents.
+  group/sibling docs; see *Group-level correspondence & attribution*) and covers all dates, so don't
+  pass `modifiedFrom` by default. A `clientGroupId` result can carry `appliedDateRange` instead —
+  follow its `note`, and never pass an arbitrary early date to get around it.
 - The trial balance is **always filtered**: `leafOnly`, `unreconciled`, `hasRecords`,
   `classification` (one value or an OR-set array; omit ⇒ all), `includeZeroBalance=false` — never
   an unfiltered full-binder sweep (≈200 KB on the Behemoth seed binder); page with `page`/`pageSize`.
@@ -316,13 +325,19 @@ paging/search idioms with the Active core (`active-*`) surfaces. What skills rel
   `binderId: [...]`; array filters `sectionId[]` / `sourceAccountId[]`; `systemStatus`, `recordType`
   (read/search only), `flag`, `reconciliation`, `classification`, `search`.
 - **Composite orientation.** `active-workpapers-binders-get` + `panels` (see token-budget defaults).
-- **Binder edits are narrow.** `active-workpapers-binders-update` is the only binder write besides
-  `-binders-attach`, and it covers **name, description and people only** — the four role holders
+- **Binder edits are narrow.** On an existing binder, `active-workpapers-binders-update` is the only
+  write besides `-binders-attach`, and it covers **name, description and people only** — the four role holders
   (`partnerId`/`managerId`/`reviewerId`/`preparerId`) plus extra team members via `addUsers`
   (`[{userId, canApprove?}]`) / `removeUsers`. PATCH semantics (omit ⇒ unchanged); team lists are
   **non-destructive**, so to swap someone out name them in `removeUsers` rather than re-listing the
   whole team. A role holder cannot also be a team member; only `description` is clearable. Status,
   dates, client, source and binder type are **not** writable — those still need the UI.
+- **New binders are their own flow.** `active-workpapers-binder-options-get` → `-binders-create` →
+  `-binders-rollover` (when rolling over) → `-binders-configure` → `-binders-trial-balance-import`,
+  polling `-binders-setup-status-get`. The server instructions and tool descriptions carry the order
+  and the one-approval rule; each response names its `nextStep`. `-binders-configure` finishes a
+  binder whose setup isn't complete — one being set up now, resuming after a blocker, or started
+  earlier in Workpapers. Never use it to change the source or columns of a binder already in use.
 - **Shared platform idioms (both servers).** Paging is **1-based `page`/`pageSize`** (1–200, default
   50) returning `{ records, recordsCount, page, pages, pageSize }` — no `skip`/`take`, no `total`/
   `items`. `search` is **plain case-insensitive substring** — there is **no `matchMode`**; `*`/`?`
@@ -332,7 +347,7 @@ paging/search idioms with the Active core (`active-*`) surfaces. What skills rel
 - **`active-documents-documents-search` specifics.** Takes **exactly one** of `clientId`/
   `clientGroupId` — for a grouped client you **must** pass `clientGroupId`, since a `clientId`-scoped
   search of a grouped entity silently omits group-level and sibling documents (no error; see
-  *Group-level correspondence & attribution*) — defaults `collapseEmailThreads=true` and a ~6-month modified window, array-valued
+  *Group-level correspondence & attribution*) — defaults `collapseEmailThreads=true` and all dates (unless the result carries `appliedDateRange`), array-valued
   filters (`cabinetId`/`typeId`/`statusId`/`tag`/`userId`/`partnerId`, `sortBy`) with `fileType` as a
   **category enum** (Word/Excel/PDF/Email/…), not a raw extension; list whole email threads with
   `active-documents-documents-thread-list`.

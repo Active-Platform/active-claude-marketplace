@@ -22,6 +22,7 @@ tools: Skill, Read, Write, Grep, Glob,
   mcp__plugin_active-platform_active-mcp__active-workpapers-matters-messages-list,
   mcp__plugin_active-platform_active-mcp__active-documents-documents-search,
   mcp__plugin_active-platform_active-mcp__active-documents-documents-get,
+  mcp__plugin_active-platform_active-mcp__active-documents-documents-thread-list,
   mcp__plugin_active-platform_active-mcp__active-documents-document-versions-list,
   mcp__plugin_active-platform_active-mcp__active-documents-document-versions-get,
   mcp__plugin_active-platform_active-mcp__active-core-clients-search,
@@ -97,7 +98,7 @@ per install and so cannot be named here — those workers receive **no** Active 
 The escape hatch for any such registration is a user/project/managed copy of this agent, which
 overrides the plugin's: copy `${CLAUDE_PLUGIN_ROOT}/agents/wp-discover.md` unchanged except its
 `tools:` line, and there replace every `mcp__plugin_active-platform_active-mcp__` with the prefix
-that connection registers under. Keep the 21 read-only tool names exactly as shipped — a
+that connection registers under. Keep the read-only tool names exactly as shipped — a
 whole-server `mcp__<server>__*` wildcard would hand this read-only worker that server's writes too.
 `wp-setup` offers to make this copy for you. The copy is **frozen**: a plugin update will not reach
 it, so it has to be rewritten after one.

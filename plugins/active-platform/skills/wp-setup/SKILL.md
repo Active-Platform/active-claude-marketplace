@@ -81,7 +81,7 @@ agent and does not track plugin updates.
    `${CLAUDE_PLUGIN_ROOT}/agents/wp-discover.md` to `~/.claude/agents/wp-discover.md` unchanged
    except its `tools:` line, and there replace every `mcp__plugin_active-platform_active-mcp__`
    with the prefix you observed. A user-level agent outranks the plugin's copy of the same name, so
-   yours is what runs. Rewriting the prefix in place keeps the worker's 21 read-only grants exactly
+   yours is what runs. Rewriting the prefix in place keeps the worker's read-only grants exactly
    as shipped — do not substitute a whole-server wildcard, which would hand it that server's writes
    too. Say plainly that the copy is frozen: a plugin update will not reach it, so it has to be
    rewritten after one.

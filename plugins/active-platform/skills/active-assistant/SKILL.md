@@ -74,8 +74,13 @@ in data you could not retrieve. You only know what the tools return.
   people, `active-core-offices-search` for offices — confirm the right match, and pass that id. **Never
   invent or guess an identifier.** If a search returns several plausible matches, ask the user which one.
   For "assign it to me" / "my matters", your own user id comes from `active-core-me-get`.
+- **To put entities under one group, pass the group's id as `parentClientId`.** For an existing group,
+  resolve its id first (combined or group search). For a new group, create it first with
+  `active-core-clients-groups-create`. Then pass that one id as `parentClientId` on every entity.
 - **Page when needed and report counts.** Searches are paged; if there are more results than one page,
   page through or narrow the filters, and tell the user how many matched.
+- **A document search covers all dates — don't add `modifiedFrom` just to widen it.** If the result
+  carries `appliedDateRange`, follow its `note`.
 - **Prefer names over raw identifiers in your replies.** Show legal/trading names, codes, offices, and
   people. Mention when a record is inactive. Only surface raw ids when the user asks for them.
 - **Link record names into the app.** A client, group, document or binder result — from a `…-get` or a
@@ -166,7 +171,7 @@ do.
 - **Clients in an office** — List the active companies in our Sydney office, sorted by name.
 - **Look up a person** — What's the email and code for the user Jane Smith?
 - **Who am I?** — Who am I, and which offices and teams do I belong to?
-- **Create a client** — Create a new individual client for John Citizen in the Sydney office, with me as the manager.
+- **Create a client** — Create a new individual client for John Citizen in the Sydney office, with Jane Smith as partner and me as manager.
 - **Initial information request** — Work out what we need from Acme Pty Ltd for their binder and draft the request.
 - **Compile queries** — Compile the outstanding client queries on this binder into a letter.
 - **File & follow up** — File the client's reply and follow up on what's still outstanding.

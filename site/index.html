@@ -1,0 +1,1559 @@
+<!doctype html>
+<html lang="en-AU">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Active Agent Setup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap">
+<style>
+/* Layout: black ledger-rule hero like the Active site, warm-white sections in a 72rem
+   column; the guide view swaps the sections for a contents sidebar beside a numbered step list. */
+:root {
+  --bg: #fffef2;
+  --surface: #ffffff;
+  --ink: #000000;
+  --body: #404040;
+  --muted: color-mix(in srgb, var(--body) 82%, var(--bg));
+  --rule: #e3e0d4;
+  --rule-strong: #000000;
+  --accent: #f15a29;
+  --accent-ink: color-mix(in srgb, var(--accent) 72%, #000000);
+  --accent-alt: #ed008c;
+  --accent-soft: #fdece7;
+  --accent-line: color-mix(in srgb, var(--accent) 35%, var(--surface));
+  --pink-soft: #fce2f1;
+  --link: #000000;
+  --pill-bg: #f0f0f0;
+  --pill-ink: #404040;
+  --bad: #c23b4d;
+  --good: #00823a;
+  --code-bg: #f0f0f0;
+  --band: #000000;
+  --band-ink: #ffffff;
+  --band-body: #a1a1a1;
+  --band-rule: color-mix(in srgb, var(--band-ink) 28%, var(--band));
+  --band-raise: #0d0d0d;
+  --font-body: "Inter", "Arial", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", Consolas, "Courier New", monospace;
+  --font-display: var(--font-body);
+  --radius: 0.75rem;
+  --radius-sm: 0.375rem;
+  --body-size: 1rem;
+  --h-case: uppercase; --h-weight: 400; --h3-weight: 500;
+  --h1-size: 2.25rem; --h2-size: 1.35rem; --h1-tracking: -0.01em; --h2-tracking: 0.02em;
+  --h1-rule-top: 1.9px solid var(--rule-strong); --h1-rule-bottom: 1.9px solid var(--rule-strong);
+  --h2-rule-top: 1.9px solid var(--rule-strong);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #000000; --surface: #0d0d0d; --ink: #ffffff; --body: #a1a1a1; --rule: #2b2b2b; --rule-strong: #ffffff;
+    --accent-ink: var(--accent); --accent-soft: color-mix(in srgb, var(--accent) 18%, var(--surface));
+    --accent-line: color-mix(in srgb, var(--accent) 45%, var(--surface));
+    --pink-soft: color-mix(in srgb, var(--accent-alt) 18%, var(--surface)); --link: #ffffff;
+    --pill-bg: #1a1a1a; --pill-ink: #a1a1a1; --bad: #f2c2c9; --good: #b5e0c6; --code-bg: #1a1a1a;
+    --band-raise: #141414;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #000000; --surface: #0d0d0d; --ink: #ffffff; --body: #a1a1a1; --rule: #2b2b2b; --rule-strong: #ffffff;
+  --accent-ink: var(--accent); --accent-soft: color-mix(in srgb, var(--accent) 18%, var(--surface));
+  --accent-line: color-mix(in srgb, var(--accent) 45%, var(--surface));
+  --pink-soft: color-mix(in srgb, var(--accent-alt) 18%, var(--surface)); --link: #ffffff;
+  --pill-bg: #1a1a1a; --pill-ink: #a1a1a1; --bad: #f2c2c9; --good: #b5e0c6; --code-bg: #1a1a1a;
+  --band-raise: #141414;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+/* Component display rules (.steps is flex) would otherwise override the hidden attribute. */
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--body); font-family: var(--font-body); font-size: var(--body-size); line-height: 1.5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--band); }
+h1, h2, h3 { margin: 0; line-height: 1.25; text-wrap: balance; color: var(--ink); font-family: var(--font-display); }
+h1 { font-size: var(--h1-size); font-weight: var(--h-weight); line-height: 1.05; letter-spacing: var(--h1-tracking); text-transform: var(--h-case); border-top: var(--h1-rule-top); border-bottom: var(--h1-rule-bottom); padding-block: 0.55rem; }
+h2 { font-size: var(--h2-size); font-weight: var(--h-weight); letter-spacing: var(--h2-tracking); text-transform: var(--h-case); border-top: var(--h2-rule-top); padding-top: 0.6rem; }
+h3 { font-size: 1.05rem; font-weight: var(--h3-weight); }
+p { margin: 0; }
+strong { font-weight: 500; color: var(--ink); }
+code, pre, .mono { font-family: var(--font-mono); }
+a { color: var(--link); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 0.18em; }
+a:hover { color: var(--accent-ink); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button { font: inherit; }
+
+.inner { max-width: 72rem; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.eyebrow { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-ink); }
+
+/* Segmented toggle (Copilot Studio agent type) */
+.seg { display: inline-flex; border: 1px solid var(--accent-line); border-radius: 999px; background: var(--surface); padding: 0.15rem; gap: 0.15rem; }
+.seg button { border: 0; background: none; color: var(--body); padding: 0.2rem 0.75rem; border-radius: 999px; cursor: pointer; font-size: 0.8125rem; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); font-weight: 500; }
+
+/* Hero (black band, as on the Active site) */
+.band { background: var(--band); color: var(--band-body); }
+.band strong { color: var(--band-ink); }
+.band h1 { color: var(--band-ink); border-color: var(--band-rule); }
+/* The darkened light-theme accent fails contrast on the always-black band. */
+.band .eyebrow { color: var(--accent); }
+.btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.15rem; border-radius: var(--radius-sm); font-size: 0.875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; text-decoration: none; cursor: pointer; border: 1px solid transparent; line-height: 1.2; }
+.btn-primary { background: var(--accent); color: #000000; border-color: var(--accent); }
+.btn-primary:hover { background: color-mix(in srgb, var(--accent) 85%, #ffffff); color: #000000; }
+.btn-ghost { background: transparent; color: var(--band-ink); border-color: var(--band-rule); }
+.btn-ghost:hover { border-color: var(--band-ink); color: var(--band-ink); }
+
+.hero .inner { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 3rem; align-items: center; padding-block: 3.5rem 4.5rem; }
+.hero h1 { font-size: clamp(2.25rem, 5.4vw, 3.6rem); max-width: 30rem; }
+.hero h1 em { font-style: normal; color: var(--accent); display: block; }
+.hero-copy { display: flex; flex-direction: column; gap: 1.5rem; min-width: 0; }
+.hero-copy p { max-width: 34rem; font-size: 1.0625rem; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+.server-card { background: var(--band-raise); border: 1px solid var(--band-rule); border-radius: var(--radius); padding: 1.4rem; display: flex; flex-direction: column; gap: 1.1rem; min-width: 0; }
+.server-card .label { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--band-body); }
+.urlrow { display: flex; align-items: center; gap: 0.5rem; background: var(--band); border: 1px solid var(--band-rule); border-radius: var(--radius-sm); padding: 0.55rem 0.55rem 0.55rem 0.8rem; min-width: 0; }
+.urlrow code { color: var(--band-ink); font-size: 0.9375rem; overflow-x: auto; white-space: nowrap; flex: 1; min-width: 0; }
+.server-facts { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.45rem 1rem; font-size: 0.875rem; margin: 0; }
+.server-facts dt { color: var(--band-body); }
+.server-facts dd { margin: 0; color: var(--band-ink); }
+.copy { flex: none; border: 1px solid var(--band-rule); background: transparent; color: var(--band-ink); border-radius: var(--radius-sm); padding: 0.3rem 0.65rem; font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; }
+.copy:hover { border-color: var(--accent); }
+.copy.done { border-color: var(--accent); color: var(--accent); }
+
+/* Sections */
+.section { padding-block: 4rem; }
+.section + .section { padding-top: 0; }
+.section-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem 3rem; align-items: end; margin-bottom: 2rem; }
+.section-head .lede { color: var(--body); max-width: 34rem; }
+.section-head > div { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
+
+.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.agent { position: relative; display: flex; flex-direction: column; gap: 0.6rem; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: 1.15rem 1.15rem 1rem; color: var(--body); text-decoration: none; min-width: 0; }
+.vendors { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
+.vendor { gap: 0.9rem; }
+.vendor h3 { font-size: 1.2rem; font-weight: 400; text-transform: uppercase; letter-spacing: 0.02em; }
+.subguides { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+.subguides a, .subguides .sub-soon { display: flex; flex-direction: column; gap: 0.35rem; padding: 0.85rem 0.9rem; border: 1px solid var(--rule); border-radius: var(--radius-sm); color: var(--body); text-decoration: none; font-size: 0.875rem; }
+.subguides a { border-color: var(--accent-line); }
+.subguides a:hover { border-color: var(--accent); box-shadow: 0 0 0 0.2rem var(--accent-soft); color: var(--body); }
+.subguides b { color: var(--ink); font-weight: 500; font-size: 1rem; }
+.subguides .sub-soon { background: color-mix(in srgb, var(--surface) 55%, var(--bg)); color: var(--muted); }
+.subguides .sub-soon b { color: var(--muted); }
+.sub-meta { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding-top: 0.35rem; }
+.go { font-size: 0.8125rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink); }
+.subguides a:hover .go { color: var(--accent-ink); }
+.pill { display: inline-flex; align-items: center; gap: 0.35rem; border-radius: 999px; padding: 0.15rem 0.6rem; font-size: 0.75rem; font-weight: 500; background: var(--pill-bg); color: var(--pill-ink); white-space: nowrap; }
+.pill.good { background: color-mix(in srgb, var(--good) 14%, var(--surface)); color: color-mix(in srgb, var(--good) 75%, var(--ink)); }
+.pill.beta { background: var(--pink-soft); color: var(--ink); }
+.pill.soon { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.6875rem; }
+.pill .dot { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--accent-alt); }
+
+/* How it works */
+.flow { display: flex; align-items: stretch; gap: 0; flex-wrap: wrap; margin-bottom: 2.5rem; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
+.flow > div { flex: 1 1 12rem; padding: 1.1rem 1.25rem; display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
+.flow > div + div { border-left: 1px solid var(--rule); }
+.flow .step-label { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-ink); font-weight: 500; }
+.flow .hop { font-size: 0.8125rem; color: var(--muted); }
+.three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; }
+.three > div { display: flex; flex-direction: column; gap: 0.6rem; border-top: 1.9px solid var(--rule-strong); padding-top: 1rem; min-width: 0; }
+.three h3 { text-transform: uppercase; font-weight: 400; letter-spacing: 0.02em; font-size: 1.05rem; }
+
+.products { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.product { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: 1.4rem; display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
+.product h3 { text-transform: uppercase; font-weight: 400; letter-spacing: 0.02em; font-size: 1.2rem; }
+.product ul { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.9375rem; }
+.product li::marker { color: var(--accent); }
+
+.cta .inner { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem 3rem; align-items: center; padding-block: 3.5rem; }
+.cta h2 { color: var(--band-ink); border-top-color: var(--band-rule); font-size: 1.9rem; }
+.cta p { margin-top: 0.75rem; max-width: 36rem; }
+.cta .hero-actions { justify-content: flex-end; }
+
+/* Guide view */
+.guide-hero .inner { padding-block: 2rem 3rem; display: flex; flex-direction: column; gap: 1.1rem; }
+.back { color: var(--band-ink); text-decoration: none; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.04em; display: inline-flex; gap: 0.4rem; align-items: center; width: fit-content; }
+.back:hover { color: var(--accent); }
+.guide-hero h1 { font-size: clamp(2rem, 4.6vw, 3rem); max-width: 40rem; }
+.guide-hero h1 em { font-style: normal; color: var(--accent); }
+.guide-hero p { max-width: 42rem; font-size: 1.0625rem; }
+.guide-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+.guide-tags .pill { background: var(--band-raise); color: var(--band-ink); border: 1px solid var(--band-rule); }
+.guide-links { display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; font-size: 0.875rem; }
+.guide-links a { color: var(--band-ink); }
+.guide-tabs { display: flex; flex-wrap: wrap; gap: 0 0.25rem; border-bottom: 1px solid var(--band-rule); }
+.guide-tabs a, .guide-tabs .soon { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.55rem 0.9rem; margin-bottom: -1px; border-bottom: 2px solid transparent; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--band-body); text-decoration: none; }
+.guide-tabs a:hover { color: var(--band-ink); }
+.guide-tabs a[aria-current="page"] { color: var(--band-ink); border-bottom-color: var(--accent); }
+.guide-tabs .pill { background: var(--band-raise); color: var(--band-body); border: 1px solid var(--band-rule); text-transform: none; letter-spacing: 0; }
+
+.layout { max-width: 72rem; margin: 0 auto; display: grid; grid-template-columns: 14rem minmax(0, 1fr); gap: 2.5rem; align-items: start; padding: 3rem max(16px, env(safe-area-inset-right, 0px)) 4rem max(16px, env(safe-area-inset-left, 0px)); }
+.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 1.5rem); max-height: calc(100vh - 3rem); overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; padding-top: 0.4rem; }
+.toc-title { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-ink); }
+.toc-groups { display: flex; flex-direction: column; gap: 0.15rem; }
+.toc a { display: block; padding: 0.3rem 0.6rem; border-radius: var(--radius-sm); font-size: 0.875rem; color: var(--muted); text-decoration: none; line-height: 1.35; }
+.toc a:hover { color: var(--ink); background: var(--code-bg); }
+.toc a.active { color: var(--accent-ink); background: var(--accent-soft); box-shadow: 0 0 0 0.2rem var(--accent-soft); font-weight: 500; }
+.toc-server { border-top: 1px solid var(--rule); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.8125rem; }
+.toc-server code { font-size: 0.8125rem; color: var(--ink); overflow-wrap: anywhere; }
+.wrap { display: flex; flex-direction: column; gap: 3rem; min-width: 0; }
+.wrap > section { display: flex; flex-direction: column; gap: 1.1rem; scroll-margin-top: 1.5rem; min-width: 0; }
+.wrap > section > p { max-width: 44rem; }
+
+.note { border: 1px solid var(--accent-line); background: var(--accent-soft); border-radius: var(--radius-sm); padding: 0.8rem 1rem; font-size: 0.9375rem; color: var(--ink); }
+.note.warn { border-color: color-mix(in srgb, var(--bad) 45%, var(--surface)); background: color-mix(in srgb, var(--bad) 10%, var(--surface)); }
+.checklist { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.checklist li { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.9375rem; min-width: 0; }
+
+.steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; counter-reset: step; }
+.steps > li { counter-increment: step; display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); gap: 0 1rem; padding-bottom: 1.75rem; position: relative; }
+.steps > li::before { content: counter(step); width: 2.25rem; height: 2.25rem; border-radius: 50%; border: 1.9px solid var(--ink); display: grid; place-items: center; font-size: 0.9375rem; font-weight: 500; color: var(--ink); background: var(--bg); position: relative; z-index: 1; }
+.steps > li:not(:last-child)::after { content: ""; position: absolute; left: 1.1rem; top: 2.4rem; bottom: 0.2rem; width: 1px; background: var(--rule); }
+.step-body { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; padding-top: 0.3rem; }
+.step-body h3 { font-size: 1.1rem; }
+.step-body ol, .step-body ul { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.3rem; }
+.ui { font-weight: 500; color: var(--ink); }
+
+.fields { border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
+.field { display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 0.25rem 1rem; padding: 0.75rem 1rem; align-items: start; }
+.field + .field { border-top: 1px solid var(--rule); }
+.field > span { font-size: 0.875rem; color: var(--muted); padding-top: 0.2rem; min-width: 0; overflow-wrap: anywhere; }
+.fields.domains .field { grid-template-columns: 20rem minmax(0, 1fr); }
+.value { display: flex; align-items: flex-start; gap: 0.5rem; min-width: 0; }
+.value > div, .value > code { flex: 1; min-width: 0; }
+.value code { font-size: 0.9375rem; color: var(--ink); overflow-wrap: anywhere; }
+.value .copy, .codeblock .copy, .prompt .copy { color: var(--ink); border-color: var(--rule); background: var(--surface); }
+.value .copy:hover, .codeblock .copy:hover, .prompt .copy:hover { border-color: var(--accent); }
+.value .copy.done, .codeblock .copy.done, .prompt .copy.done { color: var(--accent-ink); border-color: var(--accent); }
+
+.codeblock { border: 1px solid var(--rule); border-radius: var(--radius); background: var(--code-bg); overflow: hidden; }
+.codeblock header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.5rem 0.6rem 0.5rem 1rem; border-bottom: 1px solid var(--rule); font-size: 0.8125rem; color: var(--muted); }
+.codeblock pre { margin: 0; padding: 1rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.6; color: var(--ink); white-space: pre-wrap; }
+
+.prompts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+.prompt { display: flex; gap: 0.75rem; align-items: flex-start; justify-content: space-between; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius-sm); padding: 0.8rem 0.8rem 0.8rem 1rem; min-width: 0; }
+.prompt div { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
+.prompt b { font-weight: 500; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-ink); }
+.prompt span { font-size: 0.9375rem; color: var(--ink); }
+
+.tips { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.6rem; max-width: 46rem; }
+.tips li::marker { color: var(--accent); }
+
+.qa { border-top: 1px solid var(--rule); }
+.qa details { border-bottom: 1px solid var(--rule); }
+.qa summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 1rem; padding: 0.9rem 0.25rem; color: var(--ink); font-weight: 500; }
+.qa summary::-webkit-details-marker { display: none; }
+.qa summary::after { content: "+"; color: var(--accent-ink); font-weight: 400; font-size: 1.25rem; line-height: 1; }
+.qa details[open] summary::after { content: "\2212"; }
+.qa .answer { padding: 0 0.25rem 1rem; display: flex; flex-direction: column; gap: 0.6rem; max-width: 46rem; }
+.qa .answer ul { margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.3rem; }
+
+.others { padding-top: 0; }
+
+/* Setup prompt card (hero) and connection details (how it works) */
+.server-card .card-copy { font-size: 0.9375rem; }
+.promptrow { align-items: flex-start; }
+.promptrow code { white-space: normal; overflow-wrap: anywhere; line-height: 1.55; }
+.card-links { display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; font-size: 0.875rem; }
+.card-links a, .linkbtn { color: var(--band-ink); }
+.linkbtn { background: none; border: 0; padding: 0; cursor: pointer; font-size: inherit; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 0.18em; }
+.linkbtn:hover { color: var(--accent); }
+.card-note { font-size: 0.8125rem; border-top: 1px solid var(--band-rule); padding-top: 0.8rem; }
+.details { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 0.9rem; }
+.details h3 { text-transform: uppercase; font-weight: 400; letter-spacing: 0.02em; }
+
+@media (max-width: 1040px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 960px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  .toc { position: static; max-height: none; overflow: visible; background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius-sm); padding: 1rem; }
+  .toc-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0.15rem 1rem; }
+}
+@media (max-width: 820px) {
+  .hero .inner, .section-head, .cta .inner { grid-template-columns: minmax(0, 1fr); }
+  .hero .inner { padding-block: 2.5rem 3rem; gap: 2rem; }
+  .three, .products, .checklist { grid-template-columns: minmax(0, 1fr); }
+  .three { gap: 1.5rem; }
+  .cta .hero-actions { justify-content: flex-start; }
+  .flow > div + div { border-left: 0; border-top: 1px solid var(--rule); }
+  .prompts { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .field, .fields.domains .field { grid-template-columns: minmax(0, 1fr); }
+  .section { padding-block: 3rem; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .subguides a, .btn, .copy { transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s, color 0.15s; }
+}
+</style>
+
+<main>
+<!-- Landing view -->
+<div id="view-landing">
+  <section class="band hero" aria-labelledby="hero-title">
+    <div class="inner">
+      <div class="hero-copy">
+        <div class="eyebrow">Active · AI Agents</div>
+        <h1 id="hero-title">Connect<br>Your AI Agent<em>To Active</em></h1>
+        <p>Give the AI tools your firm already uses signed-in access to your Active clients, documents and workpapers. Paste the prompt into your agent, or pick your agent for step-by-step setup.</p>
+        <div class="hero-actions">
+          <button type="button" class="btn btn-primary" id="browse-agents">Browse Agents</button>
+        </div>
+      </div>
+      <aside class="server-card" aria-labelledby="setup-prompt-label">
+        <div class="label" id="setup-prompt-label">Let Your Agent Set It Up</div>
+        <p class="card-copy">Paste this into your agent. Agents that can run commands, like Claude Code, set up Active for you and ask before each command. Others walk you through the steps.</p>
+        <div class="urlrow promptrow">
+          <code id="setup-prompt">Fetch and follow the appropriate instructions to set me up for Active from https://active-platform.github.io/active-claude-marketplace/prompt.md</code>
+          <button type="button" class="copy" data-copy="setup-prompt">Copy</button>
+        </div>
+        <div class="card-links">
+          <a href="prompt.md" target="_blank" rel="noopener">Read the instructions</a>
+          <button type="button" class="linkbtn" id="copy-full">Copy full instructions</button>
+        </div>
+        <p class="card-note">Pre-release: the prompt's address isn't live yet, so agents can't fetch it. Until it is, use <strong>Copy full instructions</strong> and paste those instead.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section" id="admin" aria-labelledby="admin-title">
+    <div class="inner">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Before You Start</div>
+          <h2 id="admin-title">First, Turn On Active AI</h2>
+        </div>
+        <p class="lede">An Owner does this once for the firm in Active, whichever agent you use.</p>
+      </div>
+      <div class="three">
+        <div>
+          <h3>1. License Users</h3>
+          <p>In user and licence management, tick <strong>Active AI</strong> for each person who'll use an agent. No Active AI module? Your firm isn't licensed yet, so get in touch.</p>
+        </div>
+        <div>
+          <h3>2. Turn On The MCP Server</h3>
+          <p>In <strong>Admin Centre &gt; AI Settings</strong>, turn on the MCP server. It's a Preview feature: read the terms on that screen first, because you're approving Preview access for your firm.</p>
+        </div>
+        <div>
+          <h3>3. Set The Access Level</h3>
+          <p>Choose <strong>Read-only</strong> or <strong>Read and Write</strong> as the default. Tool overrides always allow or always block single tools. Only an Owner can change these settings.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="agents" aria-labelledby="agents-title">
+    <div class="inner">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Pick Your Agent</div>
+          <h2 id="agents-title">Choose Where You Work</h2>
+        </div>
+        <p class="lede">Pick the agent your firm uses for setup steps. We're adding guides one at a time as each agent is tested against Active.</p>
+      </div>
+      <div class="grid vendors">
+
+        <div class="agent vendor" data-vendor="microsoft">
+          <h3>Microsoft</h3>
+          <ul class="subguides">
+            <li>
+              <a href="#copilot-studio"><b>Copilot Studio</b><span>Build an agent for your team in Microsoft’s low-code studio, then publish it to Teams and Microsoft 365 Copilot.</span><span class="sub-meta"><span class="pill good">Available</span><span class="go">View Guide &rarr;</span></span></a>
+            </li>
+            <li>
+              <div class="sub-soon"><b>Microsoft 365 Copilot</b><span>The Active plugin for Copilot Cowork and Chat, added once by your Microsoft 365 admin.</span><span class="sub-meta"><span class="pill soon">Coming Soon</span></span></div>
+            </li>
+          </ul>
+        </div>
+        <div class="agent vendor" data-vendor="anthropic">
+          <h3>Anthropic</h3>
+          <ul class="subguides">
+            <li>
+              <a href="#claude"><b>Claude</b><span>The Active plugin in the Claude app for your organisation, or in Claude Code: the Active tools plus the Workpapers skills.</span><span class="sub-meta"><span class="pill good">Available</span><span class="go">View Guide &rarr;</span></span></a>
+            </li>
+          </ul>
+        </div>
+        <div class="agent vendor" data-vendor="openai">
+          <h3>OpenAI</h3>
+          <ul class="subguides">
+            <li>
+              <a href="#codex"><b>Codex</b><span>The Active plugin in the Codex app or CLI, from the same marketplace as Claude.</span><span class="sub-meta"><span class="pill good">Available</span><span class="go">View Guide &rarr;</span></span></a>
+            </li>
+            <li>
+              <a href="#chatgpt"><b>ChatGPT</b><span>Active as a plugin in ChatGPT on the web, added for your Business or Enterprise workspace.</span><span class="sub-meta"><span class="pill beta">Beta</span><span class="go">View Guide &rarr;</span></span></a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="how-title">
+    <div class="inner">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">How It Works</div>
+          <h2 id="how-title">Your Login. Your Access. Your Approval.</h2>
+        </div>
+        <p class="lede">Every agent connects to the same Active server, and every person signs in as themselves. The agent can never do more than you can.</p>
+      </div>
+      <div class="flow" aria-label="How a request travels">
+        <div><span class="step-label">Your Agent</span><strong>Claude, Copilot Studio and others</strong><span class="hop">Calls Active tools over MCP</span></div>
+        <div><span class="step-label">Active Sign-In</span><strong>Your own Active login</strong><span class="hop">Chooses the firm and grants a token</span></div>
+        <div><span class="step-label">Active MCP Server</span><strong>Checks your access on every call</strong><span class="hop">Applies your firm's licence and rules</span></div>
+        <div><span class="step-label">Active</span><strong>Clients, documents, workpapers</strong><span class="hop">Only records you can open</span></div>
+      </div>
+      <div class="three">
+        <div>
+          <h3>Sign In With Active</h3>
+          <p>Each person signs in with their own Active login the first time the agent needs it. There are no API keys or shared secrets to pass around.</p>
+        </div>
+        <div>
+          <h3>Only What You Can See</h3>
+          <p>The agent sees the clients, documents and workpapers you can see in Active. Your firm's Active licence decides which tools it gets.</p>
+        </div>
+        <div>
+          <h3>Changes Need Your OK</h3>
+          <p>Tools that create or change records act on live data. Set up your agent to show what will change and ask before it runs them.</p>
+        </div>
+      </div>
+      <div class="details">
+        <h3>Connection Details</h3>
+        <div class="fields">
+          <div class="field"><span>Server URL</span><div class="value"><code id="detail-url">https://mcp.businessfitness.com/</code><button type="button" class="copy" data-copy="detail-url">Copy</button></div></div>
+          <div class="field"><span>Protocol</span><div class="value"><div>Model Context Protocol, streamable HTTP</div></div></div>
+          <div class="field"><span>Sign-in</span><div class="value"><div>Your Active login (OAuth 2.1 with PKCE)</div></div></div>
+          <div class="field"><span>Sign-in page</span><div class="value"><div>identity.businessfitness.com.au</div></div></div>
+          <div class="field"><span>Access</span><div class="value"><div>What you can see in Active, within your firm's licence</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="tools-title">
+    <div class="inner">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">What Your Agent Can Do</div>
+          <h2 id="tools-title">One Server, Three Products</h2>
+        </div>
+        <p class="lede">The Active MCP server gives your agent tools across the Active platform. The same tools are available in every agent.</p>
+      </div>
+      <div class="products">
+        <div class="product">
+          <h3>Active Clients</h3>
+          <ul>
+            <li>Find clients, client groups, offices and people</li>
+            <li>See who the partner and manager are</li>
+            <li>Create and update client records</li>
+          </ul>
+        </div>
+        <div class="product">
+          <h3>Active Documents</h3>
+          <ul>
+            <li>Search documents and email threads by client</li>
+            <li>Upload files and add new versions</li>
+            <li>Get preview links to share</li>
+          </ul>
+        </div>
+        <div class="product">
+          <h3>Active Workpapers</h3>
+          <ul>
+            <li>Find binders, sections and worksheets</li>
+            <li>Read trial balances and source accounts</li>
+            <li>Track client queries and file documents onto binders</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Guide view: one data-guide block per live agent, chosen by the hash -->
+<div id="view-guide" hidden>
+
+
+  <div data-guide="copilot-studio" hidden>
+  <section class="band guide-hero" aria-labelledby="cs-title">
+    <div class="inner">
+      <a class="back" href="#agents"><span aria-hidden="true">&larr;</span> All Agents</a>
+      <div class="eyebrow">Microsoft</div>
+      <nav class="guide-tabs" aria-label="Microsoft guides">
+        <a href="#copilot-studio" aria-current="page">Copilot Studio</a>
+        <span class="soon">Microsoft 365 Copilot <span class="pill">Coming Soon</span></span>
+      </nav>
+      <h1 id="cs-title">Copilot Studio <em>+ Active</em></h1>
+      <p>Build an agent for your team in Microsoft Copilot Studio and give it the Active tools. Copilot Studio registers itself with Active, so you don&#39;t need a client ID or secret. Each person signs in with their own Active login.</p>
+      <div class="guide-tags">
+        <span class="pill">Low-Code</span>
+        <span class="pill">Cloud</span>
+        <span class="pill">Shared With Your Team</span>
+        <span class="pill">About 10 Minutes</span>
+      </div>
+      <div class="guide-links">
+        <a href="https://copilotstudio.microsoft.com/">Open Copilot Studio</a>
+        <a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent">Microsoft Learn: Connect an MCP Server</a>
+        <a href="https://active-help.businessfitness.com/en/">Active Support Centre</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="layout">
+    <nav class="toc" aria-label="On this page">
+      <div class="toc-title">On This Page</div>
+      <div class="toc-groups">
+        <a href="#cs-before">Before You Start</a>
+        <a href="#cs-quick">Quick Start</a>
+        <a href="#cs-instructions">Agent Instructions</a>
+        <a href="#cs-prompts">Example Prompts</a>
+        <a href="#cs-tips">Tips</a>
+        <a href="#cs-faq">FAQ</a>
+        <a href="#cs-trouble">Troubleshooting</a>
+      </div>
+      <div class="toc-server">
+        <span class="eyebrow">Server URL</span>
+        <code>https://mcp.businessfitness.com/</code>
+      </div>
+    </nav>
+
+    <div class="wrap">
+
+      <section id="cs-before" aria-labelledby="cs-before-title">
+        <h2 id="cs-before-title">Before You Start</h2>
+        <ul class="checklist">
+          <li><strong>Copilot Studio</strong><span>Access to Copilot Studio, with permission to create agents in a Power Platform environment. New agents use Copilot Credits.</span></li>
+          <li><strong>An Active login</strong><span>Your firm uses Active and has AI access turned on. Your licence decides which tools appear.</span></li>
+          <li><strong>Data policy</strong><span>Your Power Platform admin allows MCP connectors in the environment you build in.</span></li>
+        </ul>
+      </section>
+
+      <section id="cs-quick" aria-labelledby="cs-quick-title">
+        <h2 id="cs-quick-title">Quick Start</h2>
+        <p>Copilot Studio has two kinds of agent, and they add Active in slightly different places. <span class="ui">New agent</span> creates the newer kind. <span class="ui">Agent (Standard)</span> is under the arrow next to it. Pick yours:</p>
+        <div class="seg" role="group" aria-label="Agent type">
+          <button type="button" id="kind-new" data-kind="new" aria-pressed="true">New Agent</button>
+          <button type="button" id="kind-standard" data-kind="standard" aria-pressed="false">Standard Agent</button>
+        </div>
+        <p>You'll paste these three values when you add Active. The agent reads the description to decide when to call Active, so paste it as written.</p>
+        <div class="fields">
+          <div class="field"><span>Server name</span><div class="value"><code id="f-name">Active</code><button type="button" class="copy" data-copy="f-name">Copy</button></div></div>
+          <div class="field"><span>Server description</span><div class="value"><div id="f-desc">Active is the practice platform for accounting firms. Use these tools to find and update clients, client groups, offices and people; search, upload and version client documents; and work with Active Workpapers binders, trial balances, worksheets and client queries.</div><button type="button" class="copy" data-copy="f-desc">Copy</button></div></div>
+          <div class="field"><span>Server URL</span><div class="value"><code id="f-url">https://mcp.businessfitness.com/</code><button type="button" class="copy" data-copy="f-url">Copy</button></div></div>
+        </div>
+
+        <ol class="steps" data-kind-list="new">
+          <li>
+            <div class="step-body">
+              <h3>Create the agent</h3>
+              <p>In <a href="https://copilotstudio.microsoft.com/">Copilot Studio</a>, go to <span class="ui">Agents</span> and select <span class="ui">New agent</span>. Type a name over <span class="ui">Untitled Agent</span> at the top of the page.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Add the Active server</h3>
+              <ol>
+                <li>On the right of the <span class="ui">Build</span> page, select <span class="ui">+</span> next to <span class="ui">Tools</span>.</li>
+                <li>In <span class="ui">Add a tool</span>, select <span class="ui">+ Add</span>, then <span class="ui">Model Context Protocol (MCP)</span>.</li>
+                <li>Paste the server name, description and URL from above.</li>
+                <li>For <span class="ui">Authentication</span>, select <span class="ui">OAuth 2.0</span>. Leave <span class="ui">Configuration type</span> on <span class="ui">Dynamic (with discovery)</span>.</li>
+                <li>Select <span class="ui">Add</span>. Copilot Studio registers itself with Active, which takes up to 30 seconds.</li>
+              </ol>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Connect your Active account</h3>
+              <ol>
+                <li>In <span class="ui">Select a connection</span>, open the <span class="ui">Not connected</span> list and select <span class="ui">Create new connection</span>, then <span class="ui">Create</span>.</li>
+                <li>A pop-up window opens at <code>identity.businessfitness.com.au</code>. Select <span class="ui">Sign in with Microsoft</span>, or enter your email and select <span class="ui">Next</span>.</li>
+                <li>If your login belongs to more than one firm, choose the firm.</li>
+                <li>Active asks whether <span class="ui">Credential Manager</span> can access your Active account. Select <span class="ui">Allow access</span>.</li>
+                <li>Back in Copilot Studio, the connection shows <span class="ui">Active</span>. Select <span class="ui">Add</span>.</li>
+              </ol>
+              <p class="note">The sign-in opens in a pop-up. If nothing opens and Copilot Studio shows <span class="ui">Deleting connection</span>, allow pop-ups for copilotstudio.microsoft.com and select <span class="ui">Create</span> again.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Add instructions, save and test</h3>
+              <ol>
+                <li>Paste the <a href="#cs-instructions">agent instructions</a> into <span class="ui">Instructions</span> on the <span class="ui">Build</span> page.</li>
+                <li>Select <span class="ui">Save</span> in the top bar. The first save takes about 30 seconds.</li>
+                <li>Open the <span class="ui">Preview</span> tab and ask:</li>
+              </ol>
+              <div class="prompt"><div><b>Who am I?</b><span id="cs-first">Who am I, and which offices and teams do I belong to?</span></div><button type="button" class="copy" data-copy="cs-first">Copy</button></div>
+              <p>The answer shows <span class="ui">Used tool: active-core-me-get</span>, then your name, role, offices and teams from Active.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Publish to your team</h3>
+              <p>Select <span class="ui">+</span> next to <span class="ui">Channels</span> on the <span class="ui">Build</span> page to add Teams and Microsoft 365 Copilot, then select <span class="ui">Publish</span>. Each person signs in to Active the first time the agent needs it, and sees only their own Active access, as long as the Active tool uses <a href="#cs-tips">end-user credentials</a>.</p>
+            </div>
+          </li>
+        </ol>
+
+        <ol class="steps" data-kind-list="standard" hidden>
+          <li>
+            <div class="step-body">
+              <h3>Create the agent</h3>
+              <p>In <a href="https://copilotstudio.microsoft.com/">Copilot Studio</a>, go to <span class="ui">Agents</span>, select the arrow next to <span class="ui">New agent</span>, then <span class="ui">Agent (Standard)</span>. Name it and select <span class="ui">Create</span>. Wait until the agent finishes setting up.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Add the Active server</h3>
+              <ol>
+                <li>On the <span class="ui">Overview</span> page, under <span class="ui">Tools</span>, select <span class="ui">Add tool</span>.</li>
+                <li>Under <span class="ui">Create new</span>, select <span class="ui">Model Context Protocol</span>.</li>
+                <li>Paste the server name, description and URL from above.</li>
+                <li>For <span class="ui">Authentication</span>, select <span class="ui">OAuth 2.0</span>. Leave <span class="ui">Type</span> on <span class="ui">Dynamic discovery</span>.</li>
+                <li>Select <span class="ui">Create</span>. Copilot Studio registers itself with Active, which takes up to 30 seconds.</li>
+              </ol>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Connect your Active account</h3>
+              <ol>
+                <li>Under <span class="ui">Connection</span>, select <span class="ui">Create new connection</span>. If you already connected Active for another agent, that connection is picked for you and you can skip to the last step.</li>
+                <li>In the pop-up window, sign in to Active and choose your firm if asked.</li>
+                <li>When Active asks whether <span class="ui">Credential Manager</span> can access your Active account, select <span class="ui">Allow access</span>.</li>
+                <li>Select <span class="ui">Add and configure</span>.</li>
+              </ol>
+              <p>The Active tool page opens with every Active tool your login can use, each with its own switch.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Add instructions and test</h3>
+              <ol>
+                <li>On the <span class="ui">Overview</span> page, select <span class="ui">Edit</span> next to <span class="ui">Instructions</span> and paste the <a href="#cs-instructions">agent instructions</a>.</li>
+                <li>In <span class="ui">Test your agent</span>, ask <em>Who am I, and which offices and teams do I belong to?</em></li>
+              </ol>
+              <p>The activity map shows the agent calling Active, then your name, role, offices and teams.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Publish to your team</h3>
+              <p>Add Teams and Microsoft 365 Copilot on the <span class="ui">Channels</span> page, then select <span class="ui">Publish</span>. Each person signs in to Active the first time the agent needs it, as long as the Active tool uses <a href="#cs-tips">end-user credentials</a>.</p>
+            </div>
+          </li>
+        </ol>
+
+        <p class="note"><strong>Active already added in your environment?</strong> Copilot Studio saves the server for the whole environment, so adding it again fails with <em>A custom connector with display name 'Active' already exists in the environment</em>. Instead, in <span class="ui">Add a tool</span>, filter by <span class="ui">Model Context Protocol</span> and pick <span class="ui">Active</span>.</p>
+        <p class="note"><strong>Why does it say Credential Manager?</strong> That is the name Copilot Studio registers under when it connects to Active. The access screen also says access goes to <code>global.consent.azure-apim.net</code>, which is Microsoft's sign-in service for Power Platform connectors. Both are expected. Leave the access boxes ticked: the agent's tools need them, and your Active licence still limits what it can do.</p>
+      </section>
+
+      <section id="cs-instructions" aria-labelledby="cs-instructions-title">
+        <h2 id="cs-instructions-title">Agent Instructions</h2>
+        <p>Paste these into the <span class="ui">Instructions</span> box on your agent's <span class="ui">Overview</span> page, then add your firm's own rules.</p>
+        <div class="codeblock">
+          <header><span>Instructions</span><button type="button" class="copy" data-copy="instructions">Copy</button></header>
+          <pre id="instructions">You help staff at our accounting firm work in Active.
+
+- Use the Active tools for any question about our clients, client groups, offices, people, documents or Workpapers binders.
+- If a name matches more than one client, list the matches and ask which one the user means.
+- Before you create, update, upload or delete anything in Active, show what will change and ask the user to confirm.
+- Never invent client details. If a tool returns nothing, say so.</pre>
+        </div>
+      </section>
+
+      <section id="cs-prompts" aria-labelledby="cs-prompts-title">
+        <h2 id="cs-prompts-title">Example Prompts</h2>
+        <p>Use these in the test pane, or add them as conversation starters on the agent's <span class="ui">Overview</span> page.</p>
+        <div class="prompts" data-prompts></div>
+      </section>
+
+      <section id="cs-tips" aria-labelledby="cs-tips-title">
+        <h2 id="cs-tips-title">Tips</h2>
+        <ul class="tips">
+          <li>Leave the Active tool's <span class="ui">Authentication</span> setting on <span class="ui">End user credentials</span>, the default. With <span class="ui">Maker-provided credentials</span>, everyone who uses the agent acts in Active as you, and can see and change anything you can.</li>
+          <li>Keep the server description specific. Copilot Studio uses it to decide whether a question is for Active.</li>
+          <li>Turn off web search so answers about clients come only from Active: remove <span class="ui">Search all websites</span> under <span class="ui">Knowledge</span> on a new agent, or turn off <span class="ui">Web Search</span> on a Standard agent's <span class="ui">Overview</span>.</li>
+          <li>On a Standard agent, open the Active tool to switch single tools on or off. For a read-only agent, turn off the tools that create, update, upload or delete.</li>
+          <li>The agent only gets the tools your Active licence allows. People with different licences can see different tools in the same agent.</li>
+          <li>Test with a login that has the same access as the people who will use the agent, not only an administrator.</li>
+          <li>Name clients in full. "Acme Pty Ltd" finds one client faster than "Acme".</li>
+        </ul>
+      </section>
+
+      <section id="cs-faq" aria-labelledby="cs-faq-title">
+        <h2 id="cs-faq-title">FAQ</h2>
+        <div class="qa">
+          <details>
+            <summary>Do I need a client ID or secret from Active?</summary>
+            <div class="answer"><p>No. With <span class="ui">Dynamic (with discovery)</span>, called <span class="ui">Dynamic discovery</span> on a Standard agent, Copilot Studio reads Active's sign-in details from the server and registers itself. Active only accepts these registrations from Copilot Studio's own sign-in callback.</p></div>
+          </details>
+          <details>
+            <summary>What can the agent see?</summary>
+            <div class="answer"><p>Only what the signed-in person can see in Active. Every call is checked against that person's access and your firm's Active licence. Someone who can't open a client in Active can't reach it through the agent either. This holds while the Active tool uses end-user credentials, the default. If the maker switches it to their own credentials, everyone acts as the maker.</p></div>
+          </details>
+          <details>
+            <summary>Can the agent change records in Active?</summary>
+            <div class="answer"><p>Yes, if your licence includes the tools that create and update records. Those tools act on live data. Use the agent instructions above so the agent asks before it changes anything, or turn the tools off for a read-only agent.</p></div>
+          </details>
+          <details>
+            <summary>Which firm does the agent connect to?</summary>
+            <div class="answer"><p>The firm you choose when you sign in. Each person who uses the agent signs in and chooses for themselves. To change firm, delete the connection and sign in again.</p></div>
+          </details>
+          <details>
+            <summary>Do our data policies apply?</summary>
+            <div class="answer"><p>Yes. Copilot Studio reaches MCP servers through Power Platform connectors, so your environment's data policies govern the Active connection. Ask your Power Platform admin to place it in the right data policy group.</p></div>
+          </details>
+          <details>
+            <summary>How do I disconnect?</summary>
+            <div class="answer">
+              <ul>
+                <li>Remove the Active tool from the agent, or delete the connection in Power Platform.</li>
+                <li>To revoke access from Active's side, open <a href="https://identity.businessfitness.com.au/Manage/ConnectedApps">Connected Apps</a> in your Active account and remove <span class="ui">Credential Manager</span>, the name Copilot Studio uses.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section id="cs-trouble" aria-labelledby="cs-trouble-title">
+        <h2 id="cs-trouble-title">Troubleshooting</h2>
+        <div class="qa">
+          <details>
+            <summary>No tools appear after I add Active</summary>
+            <div class="answer">
+              <ul>
+                <li>Check the server URL is exactly <code>https://mcp.businessfitness.com/</code>, starting with https.</li>
+                <li>Make sure you selected <span class="ui">Add</span> (or <span class="ui">Add and configure</span>) after the connection showed <span class="ui">Active</span>.</li>
+                <li>On a Standard agent, open the Active tool and select <span class="ui">Refresh connector</span>.</li>
+              </ul>
+            </div>
+          </details>
+          <details>
+            <summary>Copilot Studio can't create the tool</summary>
+            <div class="answer"><p>Check that <span class="ui">Authentication</span> is <span class="ui">OAuth 2.0</span> and the type is <span class="ui">Dynamic (with discovery)</span> or <span class="ui">Dynamic discovery</span>. The <span class="ui">Dynamic</span> and <span class="ui">Manual</span> types need details Active doesn't hand out. If it still fails, contact Active support with the time you tried.</p></div>
+          </details>
+          <details>
+            <summary>"A custom connector with display name 'Active' already exists"</summary>
+            <div class="answer"><p>Someone already added Active in this environment, and Copilot Studio keeps one per name. Go back to <span class="ui">Add a tool</span>, filter by <span class="ui">Model Context Protocol</span> and pick <span class="ui">Active</span> from the list.</p></div>
+          </details>
+          <details>
+            <summary>Nothing opens when I create the connection</summary>
+            <div class="answer"><p>The Active sign-in opens in a pop-up window. If your browser blocks it, Copilot Studio shows <span class="ui">Deleting connection</span> and stops. Allow pop-ups for copilotstudio.microsoft.com and select <span class="ui">Create</span> again.</p></div>
+          </details>
+          <details>
+            <summary>The sign-in window shows an error</summary>
+            <div class="answer"><p>Close the window and select <span class="ui">Create a new connection</span> again. If the error repeats, note the message and contact Active support. Signing in to Active in another browser tab first can help if your session has expired.</p></div>
+          </details>
+          <details>
+            <summary>Some tools are missing</summary>
+            <div class="answer"><p>Your firm's Active licence, your own access and your firm's AI Settings decide which tools you get. Tools that change records need write access. Ask your Active administrator what your firm has turned on.</p></div>
+          </details>
+          <details>
+            <summary>The connection is blocked by a data policy</summary>
+            <div class="answer"><p>Your environment's data policy doesn't allow the connector. Ask your Power Platform admin to allow it, or build the agent in an environment where it's allowed.</p></div>
+          </details>
+        </div>
+      </section>
+
+    </div>
+  </div>
+  </div>
+
+
+
+
+  <div data-guide="claude" hidden>
+  <section class="band guide-hero" aria-labelledby="cl-title">
+    <div class="inner">
+      <a class="back" href="#agents"><span aria-hidden="true">&larr;</span> All Agents</a>
+      <div class="eyebrow">Anthropic</div>
+      <h1 id="cl-title">Claude <em>+ Active</em></h1>
+      <p>Install the Active plugin in Claude. It connects Claude to Active and adds skills for documents and client queries, and each person signs in with their own Active login. Add it for your whole organisation in the Claude app, or for yourself in Claude Code.</p>
+      <div class="guide-tags">
+        <span class="pill">Web And Desktop</span>
+        <span class="pill">Terminal</span>
+        <span class="pill">Plugin</span>
+        <span class="pill">About 10 Minutes</span>
+      </div>
+      <div class="guide-links">
+        <a href="https://claude.ai/">Open Claude</a>
+        <a href="https://code.claude.com/docs/en/mcp">Claude Code Docs: MCP</a>
+        <a href="https://github.com/Active-Platform/active-claude-marketplace">Active Plugin On GitHub</a>
+        <a href="https://active-help.businessfitness.com/en/">Active Support Centre</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="layout">
+    <nav class="toc" aria-label="On this page">
+      <div class="toc-title">On This Page</div>
+      <div class="toc-groups">
+        <a href="#cl-before">Before You Start</a>
+        <a href="#cl-app">In The Claude App</a>
+        <a href="#cl-domains">Allowed Domains</a>
+        <a href="#cl-cli">In Claude Code</a>
+        <a href="#cl-agent">Let Claude Code Do It</a>
+        <a href="#cl-prompts">Example Prompts</a>
+        <a href="#cl-faq">FAQ</a>
+        <a href="#cl-trouble">Troubleshooting</a>
+      </div>
+      <div class="toc-server">
+        <span class="eyebrow">Server URL</span>
+        <code>https://mcp.businessfitness.com/</code>
+      </div>
+    </nav>
+
+    <div class="wrap">
+
+      <section id="cl-before" aria-labelledby="cl-before-title">
+        <h2 id="cl-before-title">Before You Start</h2>
+        <ul class="checklist">
+          <li><strong>Claude app: a Claude organisation</strong><span>An organisation admin in Claude adds the plugin for everyone. That's a separate role from your Active admin role. <span class="ui">Cloud code execution and file creation</span> must be on, because Active's skills need it.</span></li>
+          <li><strong>Claude Code</strong><span>Installed and signed in.</span></li>
+          <li><strong>An Active login</strong><span>Your firm uses Active and has AI access turned on. Your licence decides which tools appear.</span></li>
+        </ul>
+      </section>
+
+      <section id="cl-app" aria-labelledby="cl-app-title">
+        <h2 id="cl-app-title">In The Claude App</h2>
+        <p>For Claude on the web and the Claude desktop app. An organisation admin does steps 1 to 3 once, for everyone.</p>
+        <ol class="steps">
+          <li>
+            <div class="step-body">
+              <h3>Add the Active marketplace</h3>
+              <p>An organisation admin goes to <span class="ui">Customise</span> &gt; <span class="ui">Plugins</span>, selects <span class="ui">Add</span>, then <span class="ui">Add marketplace</span>, and enters this URL. Leave <span class="ui">Sync automatically</span> on so the plugin stays up to date.</p>
+              <div class="fields">
+                <div class="field"><span>Marketplace URL</span><div class="value"><code id="cl-market">https://github.com/Active-Platform/active-claude-marketplace</code><button type="button" class="copy" data-copy="cl-market">Copy</button></div></div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Make the plugin available</h3>
+              <p>In <span class="ui">Organisation settings</span> &gt; <span class="ui">Plugins</span>, under <span class="ui">Active-Platform/active-claude-marketplace</span>, set <span class="ui">Active Platform</span> to <span class="ui">Available to install</span>.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Connect the Active server</h3>
+              <p>Open the Active Platform plugin, go to the <span class="ui">Connectors</span> tab, and connect <span class="ui">active-mcp</span> until it shows <span class="ui">Connected</span>.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Add it and sign in</h3>
+              <p>Each person adds <span class="ui">Active Platform</span> from <span class="ui">Plugins</span>. The first time Claude uses Active, they sign in with their Active login, choose their firm if asked, and select <span class="ui">Allow access</span>.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Try it</h3>
+              <p>Start a chat and ask:</p>
+              <div class="prompt"><div><b>Who am I?</b><span id="cl-first">Who am I, and which offices and teams do I belong to?</span></div><button type="button" class="copy" data-copy="cl-first">Copy</button></div>
+              <p>Claude calls Active and answers with your name, role, offices and teams.</p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <section id="cl-domains" aria-labelledby="cl-domains-title">
+        <h2 id="cl-domains-title">Allowed Domains</h2>
+        <p>For the Claude app. If your organisation limits outbound domains, add these in <span class="ui">Organisation settings</span> &gt; <span class="ui">Capabilities</span>, under <span class="ui">Additional allowed domains</span>. They let Claude upload and download Active documents.</p>
+        <div class="fields domains">
+          <div class="field"><span><code>*.businessfitness.com</code></span><div class="value"><div>Active platform and MCP server</div></div></div>
+          <div class="field"><span><code>*.businessfitness.com.au</code></span><div class="value"><div>Active&#39;s Australian-hosted services</div></div></div>
+          <div class="field"><span><code>adocssharedprd.blob.core.windows.net</code></span><div class="value"><div>Active Documents storage, for document upload and download</div></div></div>
+          <div class="field"><span><code>dvexportsprd.blob.core.windows.net</code></span><div class="value"><div>Active export storage, for data exports</div></div></div>
+        </div>
+        <p>Keep <span class="ui">Allow network egress</span> on, with the allowlist on <span class="ui">Package managers only</span> plus these domains. Network settings don't apply to MCP connectors, so control Active access in Active, under <span class="ui">AI Settings</span>.</p>
+      </section>
+
+      <section id="cl-cli" aria-labelledby="cl-cli-title">
+        <h2 id="cl-cli-title">In Claude Code</h2>
+        <ol class="steps">
+          <li>
+            <div class="step-body">
+              <h3>Install the plugin</h3>
+              <p>Run these in your terminal:</p>
+              <div class="codeblock">
+                <header><span>Terminal</span><button type="button" class="copy" data-copy="cl-install">Copy</button></header>
+                <pre id="cl-install">claude plugin marketplace add Active-Platform/active-claude-marketplace
+claude plugin install active-platform@active</pre>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Load it</h3>
+              <p>In Claude Code, run <code>/reload-plugins</code>.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Sign in</h3>
+              <p>Run <code>/mcp</code>, choose the Active server and sign in. A browser opens on the Active sign-in page: sign in, choose your firm if asked, and select <span class="ui">Allow access</span>.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Try it</h3>
+              <div class="prompt"><div><b>Who am I?</b><span id="cl-cli-first">Who am I, and which offices and teams do I belong to?</span></div><button type="button" class="copy" data-copy="cl-cli-first">Copy</button></div>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <section id="cl-agent" aria-labelledby="cl-agent-title">
+        <h2 id="cl-agent-title">Let Claude Code Do It</h2>
+        <p>Paste this into Claude Code. It shows you each setup command and runs it when you say OK, then tells you how to sign in.</p>
+        <div class="codeblock">
+          <header><span>Prompt</span><button type="button" class="copy" data-copy="cl-prompt">Copy</button></header>
+          <pre id="cl-prompt">Fetch and follow the appropriate instructions to set me up for Active from https://active-platform.github.io/active-claude-marketplace/prompt.md</pre>
+        </div>
+      </section>
+
+      <section id="cl-prompts" aria-labelledby="cl-prompts-title">
+        <h2 id="cl-prompts-title">Example Prompts</h2>
+        <p>Try these once you're signed in. The plugin's skills also handle longer jobs, like compiling client queries into a letter, and Claude Code can fetch a document, edit it and upload it back as a new version.</p>
+        <div class="prompts" data-prompts></div>
+      </section>
+
+      <section id="cl-faq" aria-labelledby="cl-faq-title">
+        <h2 id="cl-faq-title">FAQ</h2>
+        <div class="qa">
+          <details>
+            <summary>What does the plugin add?</summary>
+            <div class="answer"><p>The connection to the Active server, plus skills that teach Claude how to work with Active: finding clients and documents, moving documents in and out, and the Workpapers client-query workflows.</p></div>
+          </details>
+          <details>
+            <summary>Should I add Active as a connector, or with <code>claude mcp add</code>?</summary>
+            <div class="answer"><p>No. The plugin adds the Active server, and one you add by hand replaces the plugin's. In Claude Code, remove a hand-added one with <code>claude mcp remove &lt;name&gt;</code>.</p></div>
+          </details>
+          <details>
+            <summary>What can Claude see?</summary>
+            <div class="answer"><p>Only what the signed-in person can see in Active. Every call is checked against that person's access and your firm's Active licence.</p></div>
+          </details>
+          <details>
+            <summary>Which firm does Claude connect to?</summary>
+            <div class="answer"><p>The firm you choose when you sign in. In Claude Code, to switch, sign in to the Active server again from <code>/mcp</code> and choose the other firm.</p></div>
+          </details>
+          <details>
+            <summary>Does turning off network egress block Active?</summary>
+            <div class="answer"><p>No. Network egress and the domain allowlist apply to Claude's code sandbox, not to MCP connectors. Control what agents can do in Active, under <span class="ui">AI Settings</span>.</p></div>
+          </details>
+        </div>
+      </section>
+
+      <section id="cl-trouble" aria-labelledby="cl-trouble-title">
+        <h2 id="cl-trouble-title">Troubleshooting</h2>
+        <div class="qa">
+          <details>
+            <summary>Active's skills don't run in the Claude app</summary>
+            <div class="answer"><p>Turn on <span class="ui">Cloud code execution and file creation</span> in <span class="ui">Organisation settings</span> &gt; <span class="ui">Capabilities</span>. The skills need it.</p></div>
+          </details>
+          <details>
+            <summary>Document upload or download fails in the Claude app</summary>
+            <div class="answer"><p>Add the <a href="#cl-domains">allowed domains</a>, and check <span class="ui">Allow network egress</span> is on.</p></div>
+          </details>
+          <details>
+            <summary>The Claude app says Active isn't connected</summary>
+            <div class="answer"><p>An admin opens the Active Platform plugin, goes to the <span class="ui">Connectors</span> tab, and connects <span class="ui">active-mcp</span> again.</p></div>
+          </details>
+          <details>
+            <summary>The Active tools don't appear in Claude Code</summary>
+            <div class="answer"><p>Run <code>/reload-plugins</code>, or restart Claude Code. Then check <code>/mcp</code> lists the Active server. If it shows Active as failed or needing sign-in, choose it and sign in again.</p></div>
+          </details>
+          <details>
+            <summary>The browser shows a sign-in error</summary>
+            <div class="answer"><p>Close it and sign in again. If the error repeats, note the message and the time, and contact Active support.</p></div>
+          </details>
+          <details>
+            <summary>Some tools are missing</summary>
+            <div class="answer"><p>Your firm's Active licence, your own access and your firm's AI Settings decide which tools you get. Tools that change records need write access. Ask your Active administrator what your firm has turned on.</p></div>
+          </details>
+        </div>
+      </section>
+
+    </div>
+  </div>
+  </div>
+
+
+
+
+  <div data-guide="codex" hidden>
+  <section class="band guide-hero" aria-labelledby="cx-title">
+    <div class="inner">
+      <a class="back" href="#agents"><span aria-hidden="true">&larr;</span> All Agents</a>
+      <div class="eyebrow">OpenAI</div>
+      <nav class="guide-tabs" aria-label="OpenAI guides">
+        <a href="#codex" aria-current="page">Codex</a>
+        <a href="#chatgpt">ChatGPT <span class="pill">Beta</span></a>
+      </nav>
+      <h1 id="cx-title">Codex <em>+ Active</em></h1>
+      <p>Add the Active marketplace in Codex and install the Active Platform plugin. It&#39;s the same plugin Claude uses: the Active server plus skills for documents and client queries. The Codex app, the Codex CLI and the IDE extension share it, and each person signs in with their own Active login.</p>
+      <div class="guide-tags">
+        <span class="pill">Desktop App And Terminal</span>
+        <span class="pill">Plugin</span>
+        <span class="pill">About 5 Minutes</span>
+      </div>
+      <div class="guide-links">
+        <a href="https://developers.openai.com/plugins/build/plugins">Codex Docs: Plugins</a>
+        <a href="https://github.com/Active-Platform/active-claude-marketplace">Active Plugin On GitHub</a>
+        <a href="https://active-help.businessfitness.com/en/">Active Support Centre</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="layout">
+    <nav class="toc" aria-label="On this page">
+      <div class="toc-title">On This Page</div>
+      <div class="toc-groups">
+        <a href="#cx-before">Before You Start</a>
+        <a href="#cx-app">In The Codex App</a>
+        <a href="#cx-cli">In The Terminal</a>
+        <a href="#cx-agent">Let Codex Do It</a>
+        <a href="#cx-prompts">Example Prompts</a>
+        <a href="#cx-faq">FAQ</a>
+        <a href="#cx-trouble">Troubleshooting</a>
+      </div>
+      <div class="toc-server">
+        <span class="eyebrow">Server URL</span>
+        <code>https://mcp.businessfitness.com/</code>
+      </div>
+    </nav>
+
+    <div class="wrap">
+
+      <section id="cx-before" aria-labelledby="cx-before-title">
+        <h2 id="cx-before-title">Before You Start</h2>
+        <ul class="checklist">
+          <li><strong>Codex</strong><span>The Codex app or the Codex CLI, signed in to your ChatGPT account.</span></li>
+          <li><strong>An Active login</strong><span>Your firm uses Active and has AI access turned on. Your licence decides which tools appear.</span></li>
+        </ul>
+      </section>
+
+      <section id="cx-app" aria-labelledby="cx-app-title">
+        <h2 id="cx-app-title">In The Codex App</h2>
+        <ol class="steps">
+          <li>
+            <div class="step-body">
+              <h3>Add the Active marketplace</h3>
+              <p>Open <span class="ui">Settings</span> &gt; <span class="ui">Plugins</span>, select <span class="ui">+</span> to add a marketplace, and enter:</p>
+              <div class="fields">
+                <div class="field"><span>Marketplace</span><div class="value"><code id="cx-market">Active-Platform/active-claude-marketplace</code><button type="button" class="copy" data-copy="cx-market">Copy</button></div></div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Install the plugin</h3>
+              <p>Install <span class="ui">Active Platform</span> from the Active marketplace. It adds the Active server and the Active skills.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Sign in</h3>
+              <p>When Active asks you to sign in, the Active sign-in page opens in your browser. Sign in, choose your firm if asked, and select <span class="ui">Allow access</span> when Active asks whether <span class="ui">Codex</span> can access your Active account.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Try it</h3>
+              <div class="prompt"><div><b>Who am I?</b><span id="cx-first">Who am I, and which offices and teams do I belong to?</span></div><button type="button" class="copy" data-copy="cx-first">Copy</button></div>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <section id="cx-cli" aria-labelledby="cx-cli-title">
+        <h2 id="cx-cli-title">In The Terminal</h2>
+        <p>Run these to add the marketplace and install the plugin:</p>
+        <div class="codeblock">
+          <header><span>Terminal</span><button type="button" class="copy" data-copy="cx-install">Copy</button></header>
+          <pre id="cx-install">codex plugin marketplace add Active-Platform/active-claude-marketplace
+codex plugin add active-platform@active</pre>
+        </div>
+        <p>Then start Codex, run <code>/mcp</code> and sign in to Active when it asks. The Codex app and the IDE extension pick up the plugin too.</p>
+      </section>
+
+      <section id="cx-agent" aria-labelledby="cx-agent-title">
+        <h2 id="cx-agent-title">Let Codex Do It</h2>
+        <p>Paste this into Codex. It shows you each setup command and runs it when you say OK, then tells you how to sign in.</p>
+        <div class="codeblock">
+          <header><span>Prompt</span><button type="button" class="copy" data-copy="cx-prompt">Copy</button></header>
+          <pre id="cx-prompt">Fetch and follow the appropriate instructions to set me up for Active from https://active-platform.github.io/active-claude-marketplace/prompt.md</pre>
+        </div>
+      </section>
+
+      <section id="cx-prompts" aria-labelledby="cx-prompts-title">
+        <h2 id="cx-prompts-title">Example Prompts</h2>
+        <p>Try these once you're signed in. The plugin's skills also let Codex fetch a document, edit it and upload it back as a new version.</p>
+        <div class="prompts" data-prompts></div>
+      </section>
+
+      <section id="cx-faq" aria-labelledby="cx-faq-title">
+        <h2 id="cx-faq-title">FAQ</h2>
+        <div class="qa">
+          <details>
+            <summary>Do I need <code>codex mcp add</code>?</summary>
+            <div class="answer"><p>No. The plugin adds the Active server. If you added Active by hand before, remove it with <code>codex mcp remove &lt;name&gt;</code> so Codex doesn't have it twice.</p></div>
+          </details>
+          <details>
+            <summary>Do I need a client ID or API key?</summary>
+            <div class="answer"><p>No. Codex identifies itself to Active with client details that OpenAI publishes, and you sign in with your own Active login.</p></div>
+          </details>
+          <details>
+            <summary>What can Codex see?</summary>
+            <div class="answer"><p>Only what you can see in Active. Every call is checked against your access and your firm's Active licence.</p></div>
+          </details>
+          <details>
+            <summary>Will Codex ask before it changes records?</summary>
+            <div class="answer"><p>Tools that create or change records act on live data. Codex's approval settings decide whether it asks before it runs a tool, so keep approvals on for Active.</p></div>
+          </details>
+          <details>
+            <summary>How do I get plugin updates?</summary>
+            <div class="answer"><p>Run <code>codex plugin marketplace upgrade</code> to refresh the Active marketplace, then restart Codex.</p></div>
+          </details>
+          <details>
+            <summary>How do I disconnect?</summary>
+            <div class="answer">
+              <ul>
+                <li>Remove the plugin from <span class="ui">Settings</span> &gt; <span class="ui">Plugins</span>, or run <code>codex plugin remove active-platform@active</code>.</li>
+                <li>To revoke access from Active's side, open <a href="https://identity.businessfitness.com.au/Manage/ConnectedApps">Connected Apps</a> in your Active account and remove <span class="ui">Codex</span>.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section id="cx-trouble" aria-labelledby="cx-trouble-title">
+        <h2 id="cx-trouble-title">Troubleshooting</h2>
+        <div class="qa">
+          <details>
+            <summary>Sign-in fails, or mentions client registration</summary>
+            <div class="answer"><p>Run <code>codex mcp login active-mcp --oauth-client-registration cimd</code>, which tells Codex to sign in with its published client details. If it still fails, note the message and the time, and contact Active support.</p></div>
+          </details>
+          <details>
+            <summary>The browser can't get back to Codex after sign-in</summary>
+            <div class="answer"><p>Another program may be using the port Codex listens on. Set <code>mcp_oauth_callback_port</code> to a free port at the top of <code>config.toml</code>, then sign in again.</p></div>
+          </details>
+          <details>
+            <summary>Active doesn't appear after installing</summary>
+            <div class="answer"><p>Restart the Codex app, or select <span class="ui">Restart extension</span> in the IDE. Both read plugins only when they start.</p></div>
+          </details>
+          <details>
+            <summary>Some tools are missing</summary>
+            <div class="answer"><p>Your firm's Active licence, your own access and your firm's AI Settings decide which tools you get. Tools that change records need write access. Ask your Active administrator what your firm has turned on.</p></div>
+          </details>
+        </div>
+      </section>
+
+    </div>
+  </div>
+  </div>
+
+
+
+
+  <div data-guide="chatgpt" hidden>
+  <section class="band guide-hero" aria-labelledby="cg-title">
+    <div class="inner">
+      <a class="back" href="#agents"><span aria-hidden="true">&larr;</span> All Agents</a>
+      <div class="eyebrow">OpenAI</div>
+      <nav class="guide-tabs" aria-label="OpenAI guides">
+        <a href="#codex">Codex</a>
+        <a href="#chatgpt" aria-current="page">ChatGPT <span class="pill">Beta</span></a>
+      </nav>
+      <h1 id="cg-title">ChatGPT <em>+ Active</em></h1>
+      <p>Add Active to your ChatGPT workspace as a custom MCP server. ChatGPT registers itself with Active, so you don&#39;t need a client ID or secret, and each person signs in with their own Active login.</p>
+      <div class="guide-tags">
+        <span class="pill">Chat</span>
+        <span class="pill">Web</span>
+        <span class="pill">Workspace Plugin</span>
+        <span class="pill">About 10 Minutes</span>
+      </div>
+      <div class="guide-links">
+        <a href="https://chatgpt.com/">Open ChatGPT</a>
+        <a href="https://help.openai.com/en/articles/12584461-connecting-custom-mcp-servers-in-chatgpt">OpenAI Help: Custom MCP Servers</a>
+        <a href="https://active-help.businessfitness.com/en/">Active Support Centre</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="layout">
+    <nav class="toc" aria-label="On this page">
+      <div class="toc-title">On This Page</div>
+      <div class="toc-groups">
+        <a href="#cg-before">Before You Start</a>
+        <a href="#cg-quick">Quick Start</a>
+        <a href="#cg-share">Share With Your Workspace</a>
+        <a href="#cg-prompts">Example Prompts</a>
+        <a href="#cg-faq">FAQ</a>
+        <a href="#cg-trouble">Troubleshooting</a>
+      </div>
+      <div class="toc-server">
+        <span class="eyebrow">Server URL</span>
+        <code>https://mcp.businessfitness.com/</code>
+      </div>
+    </nav>
+
+    <div class="wrap">
+
+      <section id="cg-before" aria-labelledby="cg-before-title">
+        <h2 id="cg-before-title">Before You Start</h2>
+        <p class="note">Beta: we're still testing ChatGPT with Active. If a step doesn't match what you see, or sign-in fails, contact Active support.</p>
+        <ul class="checklist">
+          <li><strong>A ChatGPT workspace</strong><span>ChatGPT Business, Enterprise or Edu. On Business, an admin or owner adds the server. On Enterprise and Edu, an admin can let other members add it. Pro accounts can connect Active with read-only tools.</span></li>
+          <li><strong>An Active login</strong><span>Your firm uses Active and has AI access turned on. Your licence decides which tools appear.</span></li>
+          <li><strong>ChatGPT on the web</strong><span>Custom MCP servers can't be added in the mobile apps.</span></li>
+        </ul>
+      </section>
+
+      <section id="cg-quick" aria-labelledby="cg-quick-title">
+        <h2 id="cg-quick-title">Quick Start</h2>
+        <p>You'll paste these values when you add Active. ChatGPT reads the description to decide when to call Active.</p>
+        <div class="fields">
+          <div class="field"><span>Server name</span><div class="value"><code id="cg-name">Active</code><button type="button" class="copy" data-copy="cg-name">Copy</button></div></div>
+          <div class="field"><span>Server description</span><div class="value"><div id="cg-desc">Active is the practice platform for accounting firms. Use these tools to find and update clients, client groups, offices and people; search, upload and version client documents; and work with Active Workpapers binders, trial balances, worksheets and client queries.</div><button type="button" class="copy" data-copy="cg-desc">Copy</button></div></div>
+          <div class="field"><span>Server URL</span><div class="value"><code id="cg-url">https://mcp.businessfitness.com/</code><button type="button" class="copy" data-copy="cg-url">Copy</button></div></div>
+        </div>
+        <ol class="steps">
+          <li>
+            <div class="step-body">
+              <h3>Add the Active server</h3>
+              <p>In <a href="https://chatgpt.com/">ChatGPT</a>, go to <span class="ui">Plugins</span>, select <span class="ui">+</span>, then <span class="ui">Add custom MCP server</span>. Paste the name, description and URL from above.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Choose how it signs in</h3>
+              <ol>
+                <li>For authentication, choose <span class="ui">OAuth</span>.</li>
+                <li>If ChatGPT asks how to register, choose the client metadata document (CIMD), not dynamic client registration.</li>
+                <li>Read the risk warning, tick <span class="ui">I understand and want to continue</span>, then select <span class="ui">Create as a plugin</span>.</li>
+              </ol>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Sign in</h3>
+              <p>The Active sign-in page opens. Sign in, choose your firm if asked, and select <span class="ui">Allow access</span> when Active asks whether <span class="ui">ChatGPT</span> can access your Active account. ChatGPT then lists the Active tools it found.</p>
+            </div>
+          </li>
+          <li>
+            <div class="step-body">
+              <h3>Try it</h3>
+              <p>Install the plugin, start a new chat, type <code>@</code> and select <span class="ui">Active</span>, then ask:</p>
+              <div class="prompt"><div><b>Who am I?</b><span id="cg-first">Who am I, and which offices and teams do I belong to?</span></div><button type="button" class="copy" data-copy="cg-first">Copy</button></div>
+              <p>ChatGPT calls Active and answers with your name, role, offices and teams.</p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <section id="cg-share" aria-labelledby="cg-share-title">
+        <h2 id="cg-share-title">Share With Your Workspace</h2>
+        <p>Only you can use Active until a workspace admin or owner publishes it.</p>
+        <ul class="tips">
+          <li>An admin or owner publishes it from the <span class="ui">Admin console</span>: choose the workspace, then <span class="ui">Plugins</span>. People then find Active under <span class="ui">Settings</span> &gt; <span class="ui">Plugins</span>, and each person signs in to Active the first time they use it.</li>
+          <li>On Enterprise and Edu, admins can choose which groups get Active and which of its actions are allowed. For a read-only Active, turn off the actions that create, update or upload.</li>
+          <li>ChatGPT keeps a snapshot of the Active tools from when it was published. When Active adds tools, an admin refreshes the tool list in the workspace's app settings.</li>
+        </ul>
+      </section>
+
+      <section id="cg-prompts" aria-labelledby="cg-prompts-title">
+        <h2 id="cg-prompts-title">Example Prompts</h2>
+        <p>Type <code>@</code> and select Active, then try these.</p>
+        <div class="prompts" data-prompts></div>
+      </section>
+
+      <section id="cg-faq" aria-labelledby="cg-faq-title">
+        <h2 id="cg-faq-title">FAQ</h2>
+        <div class="qa">
+          <details>
+            <summary>Do I need a client ID or secret from Active?</summary>
+            <div class="answer"><p>No. ChatGPT identifies itself to Active with client details that OpenAI publishes, and each person signs in with their own Active login.</p></div>
+          </details>
+          <details>
+            <summary>What can ChatGPT see?</summary>
+            <div class="answer"><p>Only what the signed-in person can see in Active. Every call is checked against that person's access and your firm's Active licence.</p></div>
+          </details>
+          <details>
+            <summary>Will ChatGPT ask before it changes records?</summary>
+            <div class="answer"><p>ChatGPT asks for confirmation before actions that change data, depending on the app's permissions. Tools that create or change records act on live data.</p></div>
+          </details>
+          <details>
+            <summary>Which firm does ChatGPT connect to?</summary>
+            <div class="answer"><p>The firm you choose when you sign in. To switch, disconnect Active in ChatGPT's <span class="ui">Plugins</span> settings and connect again.</p></div>
+          </details>
+          <details>
+            <summary>How do I disconnect?</summary>
+            <div class="answer">
+              <ul>
+                <li>Disconnect or remove Active in ChatGPT's <span class="ui">Plugins</span> settings.</li>
+                <li>To revoke access from Active's side, open <a href="https://identity.businessfitness.com.au/Manage/ConnectedApps">Connected Apps</a> in your Active account and remove <span class="ui">ChatGPT</span>.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section id="cg-trouble" aria-labelledby="cg-trouble-title">
+        <h2 id="cg-trouble-title">Troubleshooting</h2>
+        <div class="qa">
+          <details>
+            <summary>There's no Add custom MCP server option</summary>
+            <div class="answer"><p>Custom MCP servers need ChatGPT Business, Enterprise or Edu, on the web. On Business, only admins and owners can add them. On Enterprise and Edu, an admin grants the <span class="ui">Create plugins with MCPs</span> permission.</p></div>
+          </details>
+          <details>
+            <summary>Sign-in fails, or mentions client registration</summary>
+            <div class="answer"><p>Remove the server and add it again, choosing the client metadata document (CIMD) when ChatGPT asks how to register. Active doesn't accept dynamic client registration from ChatGPT. If it still fails, note the message and the time, and contact Active support.</p></div>
+          </details>
+          <details>
+            <summary>Active stops working or asks you to sign in again</summary>
+            <div class="answer"><p>Reconnect Active from ChatGPT's <span class="ui">Plugins</span> settings and sign in again.</p></div>
+          </details>
+          <details>
+            <summary>Some tools are missing</summary>
+            <div class="answer"><p>Your firm's Active licence, your own access and your firm's AI Settings decide which tools you get. Tools that change records need write access. Ask your Active administrator what your firm has turned on.</p></div>
+          </details>
+        </div>
+      </section>
+
+    </div>
+  </div>
+  </div>
+
+
+  <section class="section others" aria-labelledby="others-title">
+    <div class="inner">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Other Agents</div>
+          <h2 id="others-title">Using Another Agent Too?</h2>
+        </div>
+        <p class="lede">Every agent connects to the same Active server, and each person signs in as themselves.</p>
+      </div>
+      <div class="grid vendors">
+
+        <div class="agent vendor" data-vendor="microsoft">
+          <h3>Microsoft</h3>
+          <ul class="subguides">
+            <li>
+              <a href="#copilot-studio"><b>Copilot Studio</b><span>Build an agent for your team in Microsoft’s low-code studio, then publish it to Teams and Microsoft 365 Copilot.</span><span class="sub-meta"><span class="pill good">Available</span><span class="go">View Guide &rarr;</span></span></a>
+            </li>
+            <li>
+              <div class="sub-soon"><b>Microsoft 365 Copilot</b><span>The Active plugin for Copilot Cowork and Chat, added once by your Microsoft 365 admin.</span><span class="sub-meta"><span class="pill soon">Coming Soon</span></span></div>
+            </li>
+          </ul>
+        </div>
+        <div class="agent vendor" data-vendor="anthropic">
+          <h3>Anthropic</h3>
+          <ul class="subguides">
+            <li>
+              <a href="#claude"><b>Claude</b><span>The Active plugin in the Claude app for your organisation, or in Claude Code: the Active tools plus the Workpapers skills.</span><span class="sub-meta"><span class="pill good">Available</span><span class="go">View Guide &rarr;</span></span></a>
+            </li>
+          </ul>
+        </div>
+        <div class="agent vendor" data-vendor="openai">
+          <h3>OpenAI</h3>
+          <ul class="subguides">
+            <li>
+              <a href="#codex"><b>Codex</b><span>The Active plugin in the Codex app or CLI, from the same marketplace as Claude.</span><span class="sub-meta"><span class="pill good">Available</span><span class="go">View Guide &rarr;</span></span></a>
+            </li>
+            <li>
+              <a href="#chatgpt"><b>ChatGPT</b><span>Active as a plugin in ChatGPT on the web, added for your Business or Enterprise workspace.</span><span class="sub-meta"><span class="pill beta">Beta</span><span class="go">View Guide &rarr;</span></span></a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</div>
+
+<section class="band cta" aria-labelledby="cta-title">
+  <div class="inner">
+    <div>
+      <h2 id="cta-title">Need A Hand?</h2>
+      <p>Our team can help you connect your agent, or tell you what your firm's licence includes.</p>
+    </div>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="https://www.active.businessfitness.com/au/contact-form">Get in Touch</a>
+      <a class="btn btn-ghost" href="https://active-help.businessfitness.com/en/">Support Centre</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<script>
+(function () {
+  // The full setup prompt ships beside this page.
+  var PROMPT_FILE = 'prompt.md';
+
+  var VENDORS = [{"id":"microsoft","name":"Microsoft","guides":[{"id":"copilot-studio","prefix":"cs","name":"Copilot Studio","desc":"Build an agent for your team in Microsoft’s low-code studio, then publish it to Teams and Microsoft 365 Copilot.","vendor":"Microsoft","vendorId":"microsoft"},{"id":"m365-copilot","name":"Microsoft 365 Copilot","desc":"The Active plugin for Copilot Cowork and Chat, added once by your Microsoft 365 admin.","vendor":"Microsoft","vendorId":"microsoft"}]},{"id":"anthropic","name":"Anthropic","guides":[{"id":"claude","prefix":"cl","name":"Claude","desc":"The Active plugin in the Claude app for your organisation, or in Claude Code: the Active tools plus the Workpapers skills.","vendor":"Anthropic","vendorId":"anthropic"}]},{"id":"openai","name":"OpenAI","guides":[{"id":"codex","prefix":"cx","name":"Codex","desc":"The Active plugin in the Codex app or CLI, from the same marketplace as Claude.","vendor":"OpenAI","vendorId":"openai"},{"id":"chatgpt","prefix":"cg","name":"ChatGPT","beta":true,"desc":"Active as a plugin in ChatGPT on the web, added for your Business or Enterprise workspace.","vendor":"OpenAI","vendorId":"openai"}]}];
+
+  var PROMPTS = [["Find a client","Find the client called Acme Pty Ltd and show its partner, manager, and office."],["Who’s the partner?","Who is the partner and manager on the Henderson Family Trust?"],["List a group’s entities","Show every client entity in the Henderson Group."],["Clients in an office","List the active companies in our Sydney office, sorted by name."],["Find a client’s documents","Show the documents filed against Acme Pty Ltd, most recent first."],["Get a preview link","Give me a preview link for Acme Pty Ltd’s latest tax return."],["Compile queries","Compile the outstanding client queries on this binder into a letter."],["Create a client","Create a new individual client for John Citizen in the Sydney office, with Jane Smith as partner and me as manager."]];
+
+  function esc(s) { return s.replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  // Fetched ahead of the click: a clipboard write after an await can lose the click's permission.
+  var fullPrompt = null;
+  if (window.fetch) {
+    fetch(PROMPT_FILE).then(function (r) { return r.ok ? r.text() : null; })
+      .then(function (t) { fullPrompt = t; }, function () {});
+  }
+
+  document.getElementById('copy-full').addEventListener('click', function () {
+    var btn = this;
+    function openIt() { window.open(PROMPT_FILE, '_blank', 'noopener'); }
+    if (!fullPrompt) { openIt(); return; }
+    try {
+      navigator.clipboard.writeText(fullPrompt).then(function () {
+        btn.textContent = 'Copied';
+        setTimeout(function () { btn.textContent = 'Copy full instructions'; }, 1600);
+      }, openIt);
+    } catch (err) { openIt(); }
+  });
+
+  document.querySelectorAll('[data-prompts]').forEach(function (box, g) {
+    box.innerHTML = PROMPTS.map(function (p, i) {
+      var id = 'prompt-' + g + '-' + i;
+      return '<div class="prompt"><div><b>' + esc(p[0]) + '</b><span id="' + id + '">' + esc(p[1]) + '</span></div>' +
+        '<button type="button" class="copy" data-copy="' + id + '">Copy</button></div>';
+    }).join('');
+  });
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('[data-copy]');
+    if (!btn) return;
+    var target = document.getElementById(btn.getAttribute('data-copy'));
+    if (!target) return;
+    var text = target.textContent;
+    function done() {
+      btn.textContent = 'Copied';
+      btn.classList.add('done');
+      setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1600);
+    }
+    function selectIt() {
+      var range = document.createRange();
+      range.selectNodeContents(target);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      btn.textContent = 'Selected';
+      setTimeout(function () { btn.textContent = 'Copy'; }, 2200);
+    }
+    try {
+      navigator.clipboard.writeText(text).then(done, selectIt);
+    } catch (err) { selectIt(); }
+  });
+
+  var reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var landing = document.getElementById('view-landing');
+  var guide = document.getElementById('view-guide');
+
+  function scrollToEl(el) { if (el) el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' }); }
+
+  document.getElementById('browse-agents').addEventListener('click', function () {
+    var agents = document.getElementById('agents');
+    scrollToEl(agents);
+    focusHeading(agents);
+  });
+
+  // Guide id -> the prefix of its section ids, so a deep link like #cl-faq opens the Claude guide.
+  var GUIDES = {}, VENDOR_OF = {};
+  VENDORS.forEach(function (v) {
+    v.guides.forEach(function (g) { if (g.prefix) { GUIDES[g.id] = g.prefix + '-'; VENDOR_OF[g.id] = v.id; } });
+  });
+  function guideFor(h) {
+    for (var id in GUIDES) if (h === id || h.indexOf(GUIDES[id]) === 0) return id;
+    return null;
+  }
+
+  function focusHeading(el) {
+    var heading = el && el.querySelector('h1, h2');
+    if (!heading) return;
+    if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
+    heading.focus({ preventScroll: true });
+  }
+
+  var tocLinks = [], tocSections = [], shownView = null;
+  function route() {
+    var h = location.hash.slice(1);
+    var g = guideFor(h);
+    var view = g || 'landing';
+    var viewChanged = shownView !== null && view !== shownView;
+    shownView = view;
+    landing.hidden = !!g;
+    guide.hidden = !g;
+    var guideEl = null;
+    document.querySelectorAll('[data-guide]').forEach(function (el) {
+      el.hidden = el.getAttribute('data-guide') !== g;
+      if (!el.hidden) guideEl = el;
+    });
+    // Other Agents lists every company but the one whose guide is open.
+    guide.querySelectorAll('[data-vendor]').forEach(function (el) { el.hidden = el.getAttribute('data-vendor') === VENDOR_OF[g]; });
+    tocLinks = g ? Array.prototype.slice.call(guideEl.querySelectorAll('.toc a')) : [];
+    tocSections = tocLinks.map(function (a) { return document.getElementById(a.hash.slice(1)); });
+    var target = g ? (h === g ? guideEl : document.getElementById(h))
+      : (h === 'agents' || h === 'admin' ? document.getElementById(h) : landing);
+    if (target === landing || target === guideEl) window.scrollTo(0, 0);
+    else scrollToEl(target);
+    // Switching view hides the link that was activated, so move focus to where the reader landed.
+    // Moves within one view keep focus where it is.
+    if (viewChanged) focusHeading(target);
+    updateToc();
+  }
+  window.addEventListener('hashchange', route);
+
+  function setActive(id) {
+    tocLinks.forEach(function (a) {
+      var on = a.hash === '#' + id;
+      a.classList.toggle('active', on);
+      if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+    });
+  }
+  document.querySelectorAll('.toc a').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var s = document.getElementById(a.hash.slice(1));
+      if (!s) return;
+      // Native fragment navigation jumps rather than scrolls, so the URL and focus are moved by hand.
+      e.preventDefault();
+      history.pushState(null, '', a.hash);
+      scrollToEl(s);
+      setActive(s.id);
+      focusHeading(s);
+    });
+  });
+  var ticking = false;
+  function updateToc() {
+    ticking = false;
+    if (guide.hidden) return;
+    var doc = document.documentElement;
+    var current = tocSections[0];
+    // The last sections may never reach the top band, so the page bottom selects the last link.
+    if (window.innerHeight + window.scrollY >= doc.scrollHeight - 2) {
+      current = tocSections[tocSections.length - 1];
+    } else {
+      tocSections.forEach(function (s) { if (s && s.getBoundingClientRect().top <= 120) current = s; });
+    }
+    if (current) setActive(current.id);
+  }
+  window.addEventListener('scroll', function () {
+    if (!ticking) { ticking = true; requestAnimationFrame(updateToc); }
+  }, { passive: true });
+
+  document.querySelectorAll('[data-kind]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var kind = b.getAttribute('data-kind');
+      document.querySelectorAll('[data-kind]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      document.querySelectorAll('[data-kind-list]').forEach(function (l) { l.hidden = l.getAttribute('data-kind-list') !== kind; });
+    });
+  });
+
+  route();
+})();
+</script>
