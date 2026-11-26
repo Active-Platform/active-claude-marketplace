@@ -1,0 +1,40 @@
+name: Publish the setup page
+
+# Deploys site/ -- the Active agent setup page, published here by the internal repo's publish
+# workflow -- to GitHub Pages. Seeded by hand into .github/workflows/ like validate.yml; needs
+# Settings > Pages > Source set to "GitHub Actions". Deploying an artifact skips Jekyll, so
+# site/prompt.md is served as written. See the internal repo's docs/publishing-runbook.md.
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'site/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
